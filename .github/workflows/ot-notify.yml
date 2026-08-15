@@ -1,0 +1,39 @@
+name: OT Notify LINE
+
+# Triggered by the OT Board via POST /repos/{owner}/{repo}/dispatches
+# event_type must match "gh-event" in the board (default: ot_message)
+on:
+  repository_dispatch:
+    types: [ot_message]
+
+jobs:
+  notify-line:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Push message to LINE
+        env:
+          LINE_CHANNEL_TOKEN: ${{ secrets.LINE_CHANNEL_TOKEN }}
+          LINE_TARGET_ID: ${{ secrets.LINE_TARGET_ID }}
+          # toJson() safely quotes/escapes the message (newlines, emoji, Thai text) as a JSON string literal
+          OT_MESSAGE_JSON: ${{ toJson(github.event.client_payload.message) }}
+        run: |
+          set -e
+          PAYLOAD=$(jq -n \
+            --arg to "$LINE_TARGET_ID" \
+            --argjson text "$OT_MESSAGE_JSON" \
+            '{to: $to, messages: [{type: "text", text: $text}]}')
+
+          HTTP_CODE=$(curl -sS -o response.json -w "%{http_code}" \
+            -X POST https://api.line.me/v2/bot/message/push \
+            -H "Content-Type: application/json" \
+            -H "Authorization: Bearer $LINE_CHANNEL_TOKEN" \
+            -d "$PAYLOAD")
+
+          echo "LINE API response (HTTP $HTTP_CODE):"
+          cat response.json
+          echo
+
+          if [ "$HTTP_CODE" != "200" ]; then
+            echo "LINE push failed with status $HTTP_CODE"
+            exit 1
+          fi
