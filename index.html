@@ -12,8 +12,6 @@
 <meta name="theme-color" content="#0f172a">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" href="icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&amp;family=Oswald:wght@500;600&amp;display=swap" rel="stylesheet">
@@ -49,18 +47,14 @@ input[type="date"]{color-scheme:dark}
 
 <div style="height:100dvh;max-width:620px;margin:0 auto;display:flex;flex-direction:column;background:var(--bg);position:relative;overflow:hidden">
 
-  
-
-  <div style="flex: none; background: var(--surface); border-bottom: 1px solid var(--line); padding: calc(env(safe-area-inset-top,0px) + 10px) 14px 10px; display: flex; flex-direction: column; gap: 10px; z-index: 20; width: 618px; height: 167px">
-    
+  <div style="flex: none; background: var(--surface); border-bottom: 1px solid var(--line); padding: calc(env(safe-area-inset-top,0px) + 10px) 14px 10px; display: flex; flex-direction: column; gap: 10px; z-index: 20">
     <div style="display:flex;align-items:center;gap:10px">
       <div style="flex:1;min-width:0">
         <div style="font-family:Oswald,sans-serif;font-size:19px;font-weight:600;letter-spacing:.03em;line-height:1.1">PAINTING OT BOARD</div>
         <div style="font-size: 11.5px; color: #FF0000; margin-top: 1px">{{ headerSub }}</div>
       </div>
-      
     </div><div style="display:flex;gap:8px">
-      <input type="date" value="{{ date }}" onChange="{{ onDate }}" style="flex: 1; min-width: 0; height: 35px; padding: 0 12px; border-radius: 12px; border: 1px solid var(--line); background: var(--surface2); font-size: 15px; font-weight: 500; width: 521px">
+      <input type="date" value="{{ date }}" onChange="{{ onDate }}" style="flex: 1; min-width: 0; height: 35px; padding: 0 12px; border-radius: 12px; border: 1px solid var(--line); background: var(--surface2); font-size: 15px; font-weight: 500">
     </div>
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:5px">
       <sc-for list="{{ shiftTabs }}" as="s" hint-placeholder-count="4">
@@ -88,6 +82,10 @@ input[type="date"]{color-scheme:dark}
           <button onClick="{{ toggleAll }}" style="flex:none;height:38px;padding:0 12px;border-radius:10px;border:1px solid var(--line);background:var(--surface2);font-size:12px;font-weight:600;cursor:pointer">{{ toggleAllLabel }}</button>
         </div>
 
+        <sc-if value="{{ hasAnyFilled }}" hint-placeholder-val="{{ false }}">
+          <button onClick="{{ clearAllZones }}" style="width:100%;height:44px;border-radius:12px;border:1px solid var(--danger);background:transparent;color:var(--danger);font-size:13.5px;font-weight:700;cursor:pointer">ล้างทั้งหมดทุกจุด</button>
+        </sc-if>
+
         <sc-if value="{{ armed }}" hint-placeholder-val="{{ false }}">
           <div style="display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:14px;background:var(--accent-soft);border:1px solid var(--accent);animation:otFade .18s ease">
             <div style="flex:1;min-width:0;font-size:13.5px;line-height:1.35">แตะจุดที่จะวาง <b>{{ armedName }}</b></div>
@@ -111,11 +109,16 @@ input[type="date"]{color-scheme:dark}
 
         <sc-for list="{{ zones }}" as="z" hint-placeholder-count="8">
           <div style="border-radius:14px;background:var(--surface);border:1px solid var(--line);overflow:hidden">
-            <button onClick="{{ z.onToggle }}" style="{{ z.headStyle }}">
-              <span style="{{ z.titleStyle }}">{{ z.name }}</span>
-              <span style="{{ z.countStyle }}">{{ z.countLabel }}</span>
-              <span style="{{ z.chevron }}">›</span>
-            </button>
+            <div style="{{ z.headStyle }}">
+              <button onClick="{{ z.onToggle }}" style="{{ z.toggleStyle }}">
+                <span style="{{ z.titleStyle }}">{{ z.name }}</span>
+                <span style="{{ z.countStyle }}">{{ z.countLabel }}</span>
+                <span style="{{ z.chevron }}">›</span>
+              </button>
+              <sc-if value="{{ z.hasFilled }}" hint-placeholder-val="{{ false }}">
+                <button onClick="{{ z.onClear }}" style="{{ z.clearStyle }}">ล้างทั้งหมด</button>
+              </sc-if>
+            </div>
             <sc-if value="{{ z.open }}" hint-placeholder-val="{{ true }}">
               <div style="padding:10px 10px 10px;display:flex;flex-direction:column;gap:8px">
                 <sc-for list="{{ z.stations }}" as="st" hint-placeholder-count="3">
@@ -333,13 +336,6 @@ class Component extends DCLogic {
 
   componentDidMount() {
     document.documentElement.setAttribute('data-ot-theme', this.state.theme);
-    // Only run the offline worker on the deployed site — never in the design preview,
-    // where a cached document would serve stale revisions.
-    if ('serviceWorker' in navigator) {
-      const deployed = location.protocol === 'https:' && /\.github\.io$/.test(location.hostname);
-      if (deployed) navigator.serviceWorker.register('sw.js').catch(() => {});
-      else navigator.serviceWorker.getRegistrations().then(rs => rs.forEach(r => r.unregister())).catch(() => {});
-    }
   }
 
   loadBoard(shift, points, employees) {
@@ -368,6 +364,22 @@ class Component extends DCLogic {
     if (pointId) a[pointId] = empId;
     this.setState({ assignments: a, armed: null, sheet: null });
     this.saveBoard({ assignments: a });
+  }
+
+  clearZone(pointIds, zoneName) {
+    const a = { ...this.state.assignments };
+    pointIds.forEach(id => { a[id] = null; });
+    this.setState({ assignments: a });
+    this.saveBoard({ assignments: a });
+    this.flash('ล้างทั้งหมดใน ' + zoneName + ' แล้ว');
+  }
+
+  clearAllZones() {
+    const a = {};
+    Object.keys(this.state.assignments).forEach(k => { a[k] = null; });
+    this.setState({ assignments: a });
+    this.saveBoard({ assignments: a });
+    this.flash('ล้างทั้งหมดทุกจุดแล้ว');
   }
 
   buildMessage() {
@@ -446,12 +458,16 @@ class Component extends DCLogic {
       const K1 = ink(zd);
       return {
         name: zd.zone, open,
-        headStyle: 'width:100%;display:flex;align-items:center;gap:8px;padding:9px 12px;border:none;cursor:pointer;text-align:left;min-height:48px;background:' + zd.color,
+        headStyle: 'width:100%;display:flex;align-items:stretch;background:' + zd.color,
+        toggleStyle: 'flex:1 1 auto;min-width:0;display:flex;align-items:center;gap:8px;padding:9px 12px;border:none;cursor:pointer;text-align:left;min-height:48px;background:transparent',
         titleStyle: 'flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:clamp(13px,3.6vw,16px);line-height:1.45;font-weight:700;letter-spacing:.01em;text-transform:uppercase;color:' + K1.c1,
         countLabel: zf + '/' + pts.length,
         countStyle: 'flex:none;line-height:1.3;font-family:Oswald,sans-serif;font-size:12.5px;padding:3px 9px;border-radius:99px;letter-spacing:.03em;color:' + K1.c1 +
           ';background:' + (zf === pts.length ? K1.chip2 : K1.chip),
         chevron: 'flex:none;font-size:20px;color:' + K1.c2 + ';transition:transform .18s;display:inline-block;transform:rotate(' + (open ? '90' : '0') + 'deg)',
+        hasFilled: zf > 0,
+        clearStyle: 'flex:none;align-self:center;margin-right:10px;padding:7px 11px;border-radius:8px;border:1px solid ' + K1.chip2 + ';background:transparent;font-size:11.5px;font-weight:600;letter-spacing:.02em;white-space:nowrap;cursor:pointer;color:' + K1.c2,
+        onClear: () => this.clearZone(pts.map(p => p.id), zd.zone),
         onToggle: () => {
           const o = { ...S.open, [zd.zone]: !open };
           this.setState({ open: o }); lsSet('open', o);
@@ -490,12 +506,6 @@ class Component extends DCLogic {
 
     return {
       headerSub: (SHIFTS.find(s => s.id === S.shift) || SHIFTS[0]).time + ' · ' + thaiDate(S.date),
-      themeIcon: S.theme === 'dark' ? '☀' : '☾',
-      toggleTheme: () => {
-        const t = S.theme === 'dark' ? 'light' : 'dark';
-        document.documentElement.setAttribute('data-ot-theme', t);
-        lsSet('theme', t); this.setState({ theme: t });
-      },
       date: S.date,
       onDate: (ev) => { const d = ev.target.value; this.setState({ date: d }); this.saveBoard({ date: d }); },
       shiftTabs: SHIFTS.map(s => ({
@@ -522,6 +532,8 @@ class Component extends DCLogic {
         ZONE_DEFS.forEach(z => { o[z.zone] = !allOpen; });
         this.setState({ open: o }); lsSet('open', o);
       },
+      hasAnyFilled: filled > 0,
+      clearAllZones: () => this.clearAllZones(),
 
       armed: !!armedEmp,
       armedName: armedEmp ? armedEmp.name : '',
