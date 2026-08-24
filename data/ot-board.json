@@ -33,7 +33,7 @@
     {
       "id": "e06",
       "name": "สันติ",
-      "empCode": "EMP003",
+      "empCode": "813",
       "defaultPoint": "p-a3"
     },
     {
@@ -98,8 +98,8 @@
     },
     {
       "id": "e17",
-      "name": "อี๊ด",
-      "empCode": "EMP014",
+      "name": "พิไลวรรณ",
+      "empCode": "630",
       "defaultPoint": "p-pk1"
     },
     {
@@ -110,8 +110,8 @@
     },
     {
       "id": "e19",
-      "name": "วารุณี",
-      "empCode": "817",
+      "name": "วา",
+      "empCode": "EMP016",
       "defaultPoint": "p-pk3"
     },
     {
@@ -151,5 +151,5 @@
       "date": "2026-08-24"
     }
   },
-  "updatedAt": "2026-08-24T09:41:36.386Z"
+  "updatedAt": "2026-08-24T09:41:52.769Z"
 }
