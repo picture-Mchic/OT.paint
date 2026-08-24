@@ -233,7 +233,9 @@ input[type="date"]{color-scheme:dark}
             <label style="font-size:12px;color:var(--dim);margin-top:4px">Personal access token</label>
             <input type="password" value="{{ cfgToken }}" onChange="{{ onCfgToken }}" placeholder="github_pat_…" style="width:100%;height:50px;padding:0 13px;border-radius:12px;border:1px solid var(--line);background:var(--surface2);font-size:16px">
             <div style="font-size:11.5px;color:var(--dim2);line-height:1.55;margin-top:2px">ใช้ Fine-grained PAT ที่ให้สิทธิ์เฉพาะรีโปนี้ (Contents: read and write) โทเคนเก็บอยู่ในเครื่องนี้เครื่องเดียว</div>
+            <div style="font-size:11.5px;color:var(--dim2);line-height:1.55">ข้อมูลพนักงานและบอร์ดจะซิงค์ขึ้น-ลง GitHub อัตโนมัติ ทุกเครื่องที่เปิดลิงก์นี้และตั้งค่าเดียวกันจะเห็นข้อมูลชุดเดียวกัน</div>
             <button onClick="{{ saveCfg }}" style="width:100%;height:54px;margin-top:10px;border-radius:14px;border:none;background:var(--accent);color:var(--accent-ink);font-size:16px;font-weight:700;cursor:pointer">บันทึกการตั้งค่า</button>
+            <button onClick="{{ manualSync }}" style="width:100%;height:48px;border-radius:14px;border:1px solid var(--line);background:var(--surface);font-size:14px;font-weight:600;cursor:pointer">รีเฟรชข้อมูลล่าสุดจาก GitHub</button>
           </sc-if>
         </div>
       </div>
@@ -294,6 +296,49 @@ const TPL = {
 const K = 'otm.v3.';
 const THAI_DAYS = ['อาทิตย์','จันทร์','อังคาร','พุธ','พฤหัสบดี','ศุกร์','เสาร์'];
 
+// ไฟล์ข้อมูลกลางที่เก็บบน GitHub repo (ชื่อพนักงาน + บอร์ดของทุกกะ)
+// ทุกเครื่องที่เปิดลิงก์เดียวกันจะอ่าน/เขียนไฟล์นี้ร่วมกัน แทนการใช้ localStorage ของตัวเองล้วน ๆ
+const GH_DATA_PATH = 'data/ot-board.json';
+
+function utf8ToB64(str) {
+  return btoa(unescape(encodeURIComponent(str)));
+}
+function b64ToUtf8(str) {
+  return decodeURIComponent(escape(atob(String(str || '').replace(/\n/g, ''))));
+}
+
+// อ่านไฟล์ข้อมูลกลางจาก GitHub. ไม่ใส่ token ก็อ่านได้ถ้ารีโปเป็น public (แต่จะติด rate limit ต่ำกว่า)
+async function ghGetData(cfg) {
+  const url = 'https://api.github.com/repos/' + cfg.owner + '/' + cfg.repo + '/contents/' + GH_DATA_PATH;
+  const headers = { Accept: 'application/vnd.github+json' };
+  if (cfg.token) headers.Authorization = 'Bearer ' + cfg.token;
+  const res = await fetch(url, { headers });
+  if (res.status === 404) return { sha: null, data: null };
+  if (!res.ok) { let d = ''; try { d = (await res.json()).message || ''; } catch (e) {} throw new Error('GET ' + res.status + ' ' + d); }
+  const json = await res.json();
+  const data = JSON.parse(b64ToUtf8(json.content));
+  return { sha: json.sha, data };
+}
+
+// เขียนไฟล์ข้อมูลกลางกลับไปที่ GitHub. ต้องมี token ที่มีสิทธิ์เขียนรีโปนี้
+async function ghPutData(cfg, dataObj, sha) {
+  if (!cfg.token) throw new Error('no-token');
+  const url = 'https://api.github.com/repos/' + cfg.owner + '/' + cfg.repo + '/contents/' + GH_DATA_PATH;
+  const body = {
+    message: 'Update OT board data',
+    content: utf8ToB64(JSON.stringify(dataObj, null, 2)),
+  };
+  if (sha) body.sha = sha;
+  const res = await fetch(url, {
+    method: 'PUT',
+    headers: { Accept: 'application/vnd.github+json', Authorization: 'Bearer ' + cfg.token, 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  });
+  if (!res.ok) { let d = ''; try { d = (await res.json()).message || ''; } catch (e) {} throw new Error('PUT ' + res.status + ' ' + d); }
+  const json = await res.json();
+  return json.content.sha;
+}
+
 function lsGet(key, fallback) {
   try { const v = localStorage.getItem(K + key); return v == null ? fallback : JSON.parse(v); }
   catch (e) { return fallback; }
@@ -329,13 +374,61 @@ class Component extends DCLogic {
       date: board.date, assignments: board.assignments,
       open: lsGet('open', open),
       armed: null, sheet: null, draft: null,
-      cfg: lsGet('cfg', { owner: 'picture-Mchic', repo: 'OT.paint', eventType: 'ot_message', token: '' }),
+      cfg: lsGet('cfg', { owner: 'picture-Mchic', repo: 'OT.paint', eventType: 'ot_message', token: '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' }),
       sending: false, toast: null,
     };
   }
 
   componentDidMount() {
     document.documentElement.setAttribute('data-ot-theme', this.state.theme);
+    this._sha = null;
+    this.syncFromGitHub(false);
+    this._poll = setInterval(() => this.syncFromGitHub(true), 25000);
+    this._onVis = () => { if (document.visibilityState === 'visible') this.syncFromGitHub(true); };
+    document.addEventListener('visibilitychange', this._onVis);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this._poll);
+    document.removeEventListener('visibilitychange', this._onVis);
+  }
+
+  // ดึงข้อมูลล่าสุด (ชื่อพนักงาน + บอร์ดทุกกะ) จาก GitHub มาทับ localStorage ในเครื่องนี้
+  async syncFromGitHub(silent) {
+    const cfg = this.state.cfg;
+    if (!cfg.owner || !cfg.repo) return;
+    try {
+      const { sha, data } = await ghGetData(cfg);
+      this._sha = sha;
+      if (!data) return; // ยังไม่เคยมีไฟล์บนรีโป (ยังไม่มีใครเซฟเลย)
+      if (data.employees) lsSet('employees', data.employees);
+      Object.keys(data.boards || {}).forEach((sh) => lsSet('board.' + sh, data.boards[sh]));
+      const board = this.loadBoard(this.state.shift, this.state.points, data.employees || this.state.employees);
+      this.setState({ employees: data.employees || this.state.employees, assignments: board.assignments, date: board.date });
+      if (!silent) this.flash('ซิงค์ข้อมูลล่าสุดจาก GitHub แล้ว');
+    } catch (e) {
+      if (!silent) this.flash('ดึงข้อมูลจาก GitHub ไม่สำเร็จ: ' + e.message, 'err');
+    }
+  }
+
+  // ส่งข้อมูลปัจจุบัน (ชื่อพนักงาน + บอร์ดทุกกะ) ขึ้น GitHub ให้เครื่องอื่นเห็นด้วย
+  // employeesOverride: ใส่ list ล่าสุดตรง ๆ เวลาที่เพิ่งแก้ไข (กัน state ยังอัปเดตไม่ทัน)
+  async syncToGitHub(employeesOverride) {
+    const cfg = this.state.cfg;
+    if (!cfg.owner || !cfg.repo || !cfg.token) return; // ยังไม่ตั้งค่า token ก็ข้าม (บันทึกในเครื่องนี้อย่างเดียว)
+    const boards = {};
+    SHIFTS.forEach((s) => { boards[s.id] = lsGet('board.' + s.id, null) || { assignments: {}, date: todayStr() }; });
+    const payload = { employees: employeesOverride || lsGet('employees', this.state.employees), boards, updatedAt: new Date().toISOString() };
+    try {
+      this._sha = await ghPutData(cfg, payload, this._sha);
+    } catch (e) {
+      try {
+        const { sha } = await ghGetData(cfg); // ชนกับที่เครื่องอื่นเซฟไปก่อน ลองดึง sha ล่าสุดแล้วเซฟซ้ำ
+        this._sha = await ghPutData(cfg, payload, sha);
+      } catch (e2) {
+        this.flash('ซิงค์ขึ้น GitHub ไม่สำเร็จ (บันทึกในเครื่องนี้แล้ว): ' + e2.message, 'err');
+      }
+    }
   }
 
   loadBoard(shift, points, employees) {
@@ -364,6 +457,7 @@ class Component extends DCLogic {
     if (pointId) a[pointId] = empId;
     this.setState({ assignments: a, armed: null, sheet: null });
     this.saveBoard({ assignments: a });
+    this.syncToGitHub();
   }
 
   clearZone(pointIds, zoneName) {
@@ -371,6 +465,7 @@ class Component extends DCLogic {
     pointIds.forEach(id => { a[id] = null; });
     this.setState({ assignments: a });
     this.saveBoard({ assignments: a });
+    this.syncToGitHub();
     this.flash('ล้างทั้งหมดใน ' + zoneName + ' แล้ว');
   }
 
@@ -379,6 +474,7 @@ class Component extends DCLogic {
     Object.keys(this.state.assignments).forEach(k => { a[k] = null; });
     this.setState({ assignments: a });
     this.saveBoard({ assignments: a });
+    this.syncToGitHub();
     this.flash('ล้างทั้งหมดทุกจุดแล้ว');
   }
 
@@ -507,7 +603,7 @@ class Component extends DCLogic {
     return {
       headerSub: (SHIFTS.find(s => s.id === S.shift) || SHIFTS[0]).time + ' · ' + thaiDate(S.date),
       date: S.date,
-      onDate: (ev) => { const d = ev.target.value; this.setState({ date: d }); this.saveBoard({ date: d }); },
+      onDate: (ev) => { const d = ev.target.value; this.setState({ date: d }); this.saveBoard({ date: d }); this.syncToGitHub(); },
       shiftTabs: SHIFTS.map(s => ({
         label: s.label, time: s.time,
         timeStyle: 'font-size:clamp(11px,3.3vw,15px);font-family:Oswald,sans-serif;letter-spacing:0;line-height:1.1;color:' +
@@ -660,7 +756,8 @@ class Component extends DCLogic {
         const list = d.isNew ? S.employees.concat([rec]) : S.employees.map(e => (e.id === rec.id ? rec : e));
         lsSet('employees', list);
         this.setState({ employees: list, sheet: null, draft: null });
-        this.flash('บันทึกแล้ว');
+        this.syncToGitHub();
+        this.flash('บันทึกแล้ว กำลังซิงค์ขึ้น GitHub…');
       },
       deleteDraft: () => {
         const d = S.draft;
@@ -672,6 +769,8 @@ class Component extends DCLogic {
         lsSet('employees', list);
         this.setState({ employees: list, assignments: a, sheet: null, draft: null });
         this.saveBoard({ assignments: a });
+        this.syncToGitHub();
+        this.flash('ลบแล้ว กำลังซิงค์ขึ้น GitHub…');
       },
 
       cfgOwner: S.cfg.owner || '', cfgRepo: S.cfg.repo || '', cfgEvent: S.cfg.eventType || '', cfgToken: S.cfg.token || '',
@@ -679,7 +778,14 @@ class Component extends DCLogic {
       onCfgRepo: (ev) => this.setState({ cfg: { ...S.cfg, repo: ev.target.value } }),
       onCfgEvent: (ev) => this.setState({ cfg: { ...S.cfg, eventType: ev.target.value } }),
       onCfgToken: (ev) => this.setState({ cfg: { ...S.cfg, token: ev.target.value } }),
-      saveCfg: () => { lsSet('cfg', S.cfg); this.setState({ sheet: null }); this.flash('บันทึกการตั้งค่าแล้ว'); },
+      saveCfg: () => {
+        lsSet('cfg', S.cfg);
+        this.setState({ sheet: null });
+        this._sha = null;
+        this.syncFromGitHub(false);
+        this.flash('บันทึกการตั้งค่าแล้ว กำลังดึงข้อมูลล่าสุด…');
+      },
+      manualSync: () => this.syncFromGitHub(false),
 
       hasToast: !!S.toast,
       toastText: S.toast ? S.toast.text : '',
