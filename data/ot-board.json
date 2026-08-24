@@ -1,0 +1,155 @@
+{
+  "employees": [
+    {
+      "id": "e01",
+      "name": "ปรีชา",
+      "empCode": "606",
+      "defaultPoint": "p-sv1"
+    },
+    {
+      "id": "e02",
+      "name": "เจมส์",
+      "empCode": "ฟฟ",
+      "defaultPoint": "p-sv2"
+    },
+    {
+      "id": "e03",
+      "name": "เจี๊ยบ",
+      "empCode": "000",
+      "defaultPoint": "p-sv3"
+    },
+    {
+      "id": "e04",
+      "name": "เนย",
+      "empCode": "EMP001",
+      "defaultPoint": "p-a1"
+    },
+    {
+      "id": "e05",
+      "name": "รุ่ง",
+      "empCode": "EMP002",
+      "defaultPoint": "p-a2"
+    },
+    {
+      "id": "e06",
+      "name": "สันติ",
+      "empCode": "EMP003",
+      "defaultPoint": "p-a3"
+    },
+    {
+      "id": "e07",
+      "name": "ภัค",
+      "empCode": "EMP004",
+      "defaultPoint": "p-a4"
+    },
+    {
+      "id": "e08",
+      "name": "บีม",
+      "empCode": "EMP005",
+      "defaultPoint": "p-a5"
+    },
+    {
+      "id": "e09",
+      "name": "ฝ้าย",
+      "empCode": "EMP006",
+      "defaultPoint": "p-b1"
+    },
+    {
+      "id": "e10",
+      "name": "หมิว",
+      "empCode": "EMP007",
+      "defaultPoint": "p-b2"
+    },
+    {
+      "id": "e11",
+      "name": "มิว",
+      "empCode": "EMP008",
+      "defaultPoint": "p-b3"
+    },
+    {
+      "id": "e12",
+      "name": "แก้ม",
+      "empCode": "EMP009",
+      "defaultPoint": "p-b4"
+    },
+    {
+      "id": "e13",
+      "name": "เอ๋",
+      "empCode": "EMP010",
+      "defaultPoint": "p-b5"
+    },
+    {
+      "id": "e14",
+      "name": "อาร์ม",
+      "empCode": "EMP011",
+      "defaultPoint": "p-su1"
+    },
+    {
+      "id": "e15",
+      "name": "รุต",
+      "empCode": "EMP012",
+      "defaultPoint": "p-mx1"
+    },
+    {
+      "id": "e16",
+      "name": "โบ๊ต",
+      "empCode": "EMP013",
+      "defaultPoint": "p-mx2"
+    },
+    {
+      "id": "e17",
+      "name": "อี๊ด",
+      "empCode": "EMP014",
+      "defaultPoint": "p-pk1"
+    },
+    {
+      "id": "e18",
+      "name": "ตั๊ก",
+      "empCode": "EMP015",
+      "defaultPoint": "p-pk2"
+    },
+    {
+      "id": "e19",
+      "name": "วา",
+      "empCode": "EMP016",
+      "defaultPoint": "p-pk3"
+    },
+    {
+      "id": "e20",
+      "name": "ฟ้า",
+      "empCode": "EMP017",
+      "defaultPoint": "p-pk4"
+    },
+    {
+      "id": "e21",
+      "name": "กร",
+      "empCode": "EMP018",
+      "defaultPoint": "p-po1"
+    },
+    {
+      "id": "e22",
+      "name": "ตั้ม",
+      "empCode": "EMP019",
+      "defaultPoint": "p-jc1"
+    }
+  ],
+  "boards": {
+    "morning": {
+      "assignments": {},
+      "date": "2026-08-24"
+    },
+    "evening": {
+      "assignments": {},
+      "date": "2026-08-24"
+    },
+    "night": {
+      "assignments": {},
+      "date": "2026-08-24"
+    },
+    "holiday": {
+      "assignments": {},
+      "date": "2026-08-24"
+    }
+  },
+  "updatedAt": "2026-08-24T09:39:53.366Z"
+}
