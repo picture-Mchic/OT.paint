@@ -135,7 +135,9 @@
   ],
   "boards": {
     "morning": {
-      "assignments": {},
+      "assignments": {
+        "p-sv1": "e01"
+      },
       "date": "2026-08-24"
     },
     "evening": {
@@ -155,5 +157,5 @@
       "date": "2026-08-24"
     }
   },
-  "updatedAt": "2026-08-24T10:01:07.167Z"
+  "updatedAt": "2026-08-24T10:02:13.653Z"
 }
