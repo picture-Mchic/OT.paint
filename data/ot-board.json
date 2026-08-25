@@ -137,6 +137,12 @@
       "name": "วิชุดา",
       "empCode": "MEP019",
       "defaultPoint": "p-po1"
+    },
+    {
+      "id": "e-cqidhl6",
+      "name": "สิริลักษณ์",
+      "empCode": "501226",
+      "defaultPoint": "p-b5"
     }
   ],
   "boards": {
@@ -172,5 +178,5 @@
       "date": "2026-08-24"
     }
   },
-  "updatedAt": "2026-08-25T08:00:15.585Z"
+  "updatedAt": "2026-08-25T08:02:34.869Z"
 }
