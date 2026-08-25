@@ -142,11 +142,11 @@
     },
     "evening": {
       "assignments": {
-        "p-sv1": "e01",
-        "p-sv2": "e02",
-        "p-sv3": "e03",
-        "p-a1": "e04",
-        "p-a2": "e05"
+        "p-sv1": null,
+        "p-sv2": null,
+        "p-sv3": null,
+        "p-a1": null,
+        "p-a2": null
       },
       "date": "2026-08-24"
     },
@@ -159,5 +159,5 @@
       "date": "2026-08-24"
     }
   },
-  "updatedAt": "2026-08-25T06:00:16.917Z"
+  "updatedAt": "2026-08-25T06:10:43.364Z"
 }
