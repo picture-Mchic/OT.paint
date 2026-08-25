@@ -131,6 +131,12 @@
       "name": "พูลสวัสดิ์",
       "empCode": "895",
       "defaultPoint": "p-jc1"
+    },
+    {
+      "id": "e-b1d56o3",
+      "name": "วิชุดา",
+      "empCode": "MEP019",
+      "defaultPoint": "p-po1"
     }
   ],
   "boards": {
@@ -159,5 +165,5 @@
       "date": "2026-08-24"
     }
   },
-  "updatedAt": "2026-08-25T06:10:47.869Z"
+  "updatedAt": "2026-08-25T06:13:31.689Z"
 }
