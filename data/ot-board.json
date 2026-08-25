@@ -124,7 +124,7 @@
       "id": "e21",
       "name": "สหกรณ์",
       "empCode": "EMP018",
-      "defaultPoint": "p-po1"
+      "defaultPoint": "p-a3"
     },
     {
       "id": "e22",
@@ -165,5 +165,5 @@
       "date": "2026-08-24"
     }
   },
-  "updatedAt": "2026-08-25T06:13:31.689Z"
+  "updatedAt": "2026-08-25T06:14:11.431Z"
 }
