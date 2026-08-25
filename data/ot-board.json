@@ -148,7 +148,8 @@
   "boards": {
     "morning": {
       "assignments": {
-        "p-sv1": null
+        "p-sv1": null,
+        "p-sv2": "e02"
       },
       "date": "2026-08-26"
     },
@@ -187,5 +188,5 @@
       "date": "2026-08-24"
     }
   },
-  "updatedAt": "2026-08-25T09:15:21.191Z"
+  "updatedAt": "2026-08-25T09:15:43.191Z"
 }
