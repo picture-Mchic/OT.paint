@@ -19,12 +19,6 @@
       "defaultPoint": "p-sv3"
     },
     {
-      "id": "e04",
-      "name": "ลัดดา",
-      "empCode": "EMP001",
-      "defaultPoint": "p-a1"
-    },
-    {
       "id": "e05",
       "name": "รุ่งอรุณ",
       "empCode": "EMP002",
@@ -202,5 +196,5 @@
       "date": "2026-08-24"
     }
   },
-  "updatedAt": "2026-09-02T07:52:00.715Z"
+  "updatedAt": "2026-09-02T11:05:20.342Z"
 }
