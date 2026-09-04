@@ -375,7 +375,7 @@ class Component extends DCLogic {
     this.state = {
       tab: 'board', theme: lsGet('theme', 'dark'), shift,
       points, employees,
-      date: board.date, assignments: board.assignments,
+      date: todayStr(), assignments: board.assignments,
       open: lsGet('open', open),
       armed: null, sheet: null, draft: null,
       cfg: lsGet('cfg', { owner: 'picture-Mchic', repo: 'OT.paint', eventType: 'ot_message', token: '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' }),
@@ -408,7 +408,8 @@ class Component extends DCLogic {
       if (data.employees) lsSet('employees', data.employees);
       Object.keys(data.boards || {}).forEach((sh) => lsSet('board.' + sh, data.boards[sh]));
       const board = this.loadBoard(this.state.shift, this.state.points, data.employees || this.state.employees);
-      this.setState({ employees: data.employees || this.state.employees, assignments: board.assignments, date: board.date });
+      // silent=true คือ poll พื้นหลัง/กลับมาเปิดแท็บ ไม่ควรไปทับวันที่ที่ผู้ใช้กำลังเลือกอยู่
+      this.setState({ employees: data.employees || this.state.employees, assignments: board.assignments, date: silent ? this.state.date : todayStr() });
       if (!silent) this.flash('ซิงค์ข้อมูลล่าสุดจาก GitHub แล้ว');
     } catch (e) {
       if (!silent) this.flash('ดึงข้อมูลจาก GitHub ไม่สำเร็จ: ' + e.message, 'err');
