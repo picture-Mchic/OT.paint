@@ -1,775 +1,838 @@
 <!DOCTYPE html>
-<html lang="th">
+<html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>สั่งข้าวมันไก่พรีเมียม</title>
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Noto+Sans+Thai:wght@300;400;500;600&display=swap');
-
-  :root{
-    --bg: #FDFBF7;
-    --paper: #FFFFFF;
-    --ink: #2C3539;
-    --ink-soft: #7A8B99;
-    --gold: #C5A059;
-    --gold-light: #E8D3A5;
-    --gold-dark: #9B7B3E;
-    --danger: #E26D5C;
-    --success: #6E8B4A;
-    --line: #EAE5DB;
-  }
-
-  * { box-sizing: border-box; }
-  body {
-    margin: 0;
-    background: var(--bg);
-    font-family: 'Noto Sans Thai', sans-serif;
-    color: var(--ink);
-    padding: 32px 16px 64px;
-    font-weight: 400;
-  }
-
-  .wrap { max-width: 680px; margin: 0 auto; }
-
-  .brand-banner {
-    width: 100%; display: block; border-radius: 12px; margin-bottom: 24px;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.06);
-    border: 1px solid var(--line);
-    object-fit: cover;
-  }
-
-  header { text-align: center; margin-bottom: 32px; }
-  header .eyebrow {
-    font-size: 12px; letter-spacing: 0.15em; color: var(--gold-dark);
-    text-transform: uppercase; font-weight: 600; margin-bottom: 8px;
-  }
-  header h1 {
-    font-family: 'Cinzel', serif; font-weight: 600;
-    font-size: 32px; margin: 0 0 8px; color: var(--ink);
-    letter-spacing: 1px;
-  }
-  header p { margin: 0; color: var(--ink-soft); font-size: 14px; font-weight: 400; }
-
-  .ticket {
-    background: var(--paper);
-    border: 1px solid var(--line);
-    border-radius: 16px;
-    padding: 32px 24px;
-    position: relative;
-    margin-bottom: 32px;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.04);
-  }
-
-  .field { margin-bottom: 20px; }
-  .field label {
-    display: block; font-size: 14px; font-weight: 600; color: var(--ink);
-    margin-bottom: 8px; letter-spacing: 0.5px;
-  }
-  .field .hint { font-weight: 400; color: var(--ink-soft); font-size: 12px; margin-left: 4px; }
-
-  input[type=text], select, textarea {
-    width: 100%; border: 1px solid var(--line); border-radius: 8px;
-    padding: 12px 16px; font-size: 15px; font-family: inherit; color: var(--ink);
-    background: #FAFAFA; outline: none; transition: all 0.3s ease;
-  }
-  input[type=text]:focus, select:focus, textarea:focus {
-    border-color: var(--gold);
-    background: #FFFFFF;
-    box-shadow: 0 0 0 3px rgba(197, 160, 89, 0.15);
-  }
-  textarea { resize: vertical; min-height: 80px; }
-
-  .chips { display: flex; flex-wrap: wrap; gap: 10px; }
-  .chip {
-    border: 1px solid var(--line); border-radius: 8px; padding: 8px 16px;
-    font-size: 14px; cursor: pointer; user-select: none; background: #FAFAFA;
-    color: var(--ink-soft); transition: all 0.2s; font-weight: 500;
-  }
-  .chip:hover { border-color: var(--gold-light); color: var(--ink); }
-  .chip.active { 
-    background: var(--gold); 
-    border-color: var(--gold-dark); 
-    color: #FFFFFF; 
-    box-shadow: 0 4px 10px rgba(197, 160, 89, 0.3);
-  }
-
-  .toggle-row { display: flex; gap: 10px; background: #FAFAFA; padding: 4px; border-radius: 10px; border: 1px solid var(--line); }
-  .toggle-opt {
-    flex: 1; text-align: center; padding: 10px 8px; border-radius: 6px;
-    font-size: 14px; cursor: pointer; color: var(--ink-soft); transition: all 0.3s;
-    font-weight: 500;
-  }
-  .toggle-opt:hover { color: var(--ink); }
-  .toggle-opt.active { 
-    background: var(--gold); 
-    color: #FFFFFF; 
-    box-shadow: 0 4px 10px rgba(197, 160, 89, 0.3); 
-    border: 1px solid var(--gold-dark); 
-  }
-
-  .price-tag {
-    display: inline-flex; align-items: center; gap: 6px; background: rgba(197, 160, 89, 0.1);
-    color: var(--gold-dark); font-size: 14px; font-weight: 600; padding: 6px 16px; border-radius: 8px;
-    border: 1px solid rgba(197, 160, 89, 0.2); margin-top: 4px; letter-spacing: 0.5px;
-  }
-
-  .submit-btn {
-    width: 100%; background: linear-gradient(135deg, #D4AF37 0%, #B5952F 100%);
-    color: #FFFFFF; border: none; border-radius: 8px;
-    padding: 16px; font-size: 16px; font-weight: 600; font-family: inherit; cursor: pointer;
-    margin-top: 12px; transition: transform 0.2s, box-shadow 0.2s;
-    text-transform: uppercase; letter-spacing: 1px;
-  }
-  .submit-btn:hover { box-shadow: 0 4px 15px rgba(197, 160, 89, 0.4); transform: translateY(-1px); }
-  .submit-btn:disabled { background: var(--line); color: var(--ink-soft); cursor: not-allowed; box-shadow: none; transform: none; }
-
-  .status-msg {
-    text-align: center; font-size: 14px; margin-top: 12px; color: var(--success); min-height: 20px; font-weight: 500;
-  }
-
-  .divider {
-    display: flex; align-items: center; gap: 16px; margin: 40px 0 24px; color: var(--gold-dark); font-size: 14px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase;
-  }
-  .divider::before, .divider::after { content: ""; flex: 1; height: 1px; background: linear-gradient(90deg, transparent, var(--line), transparent); }
-
-  .group-section { margin-bottom: 32px; }
-  .group-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; border-bottom: 1px solid var(--line); padding-bottom: 12px; }
-  .group-head h2 { font-family: 'Cinzel', serif; font-weight: 600; font-size: 20px; margin: 0; color: var(--ink); }
-  .group-meta { display: flex; align-items: center; gap: 10px; }
-  
-  .count-badge, .sum-badge {
-    font-size: 12px; font-weight: 600; padding: 4px 12px; border-radius: 6px; letter-spacing: 0.5px;
-  }
-  .count-badge { background: #FAFAFA; color: var(--ink); border: 1px solid var(--line); }
-  .sum-badge { background: rgba(197, 160, 89, 0.1); color: var(--gold-dark); border: 1px solid rgba(197, 160, 89, 0.3); }
-
-  .refresh-btn {
-    width: 100%; border: 1px solid var(--line); background: var(--paper); border-radius: 8px; padding: 12px;
-    font-size: 14px; color: var(--ink-soft); cursor: pointer; font-family: inherit; transition: all 0.3s;
-    letter-spacing: 0.5px; text-transform: uppercase; font-weight: 600;
-  }
-  .refresh-btn:hover { border-color: var(--gold); color: var(--gold-dark); background: rgba(197, 160, 89, 0.05); }
-
-  .order-list { display: flex; flex-direction: column; gap: 12px; }
-  .order-card {
-    background: var(--paper); border: 1px solid var(--line); border-radius: 12px;
-    padding: 16px; display: flex; justify-content: space-between; gap: 12px;
-    transition: border-color 0.3s, box-shadow 0.3s;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.02);
-  }
-  .order-card:hover { border-color: var(--gold-light); box-shadow: 0 4px 12px rgba(197, 160, 89, 0.08); }
-  .order-main { flex: 1; min-width: 0; }
-  .order-name { font-weight: 600; font-size: 16px; margin: 0 0 4px; color: var(--ink); }
-  .order-detail { font-size: 13px; color: var(--ink-soft); margin: 0 0 6px; line-height: 1.5; }
-  .order-time { font-size: 12px; color: #B0BCC4; font-weight: 400; }
-  .del-btn {
-    border: none; background: transparent; color: #D1D9E0; cursor: pointer;
-    font-size: 20px; line-height: 1; padding: 4px; flex-shrink: 0; transition: color 0.2s;
-  }
-  .del-btn:hover { color: var(--danger); }
-
-  .empty-state {
-    text-align: center; padding: 32px 16px; color: var(--ink-soft); font-size: 14px;
-    border: 1px dashed var(--line); border-radius: 12px; font-weight: 400;
-    background: #FAFAFA;
-  }
-
-  .setup-warning {
-    background: #FFF5F5; border: 1px solid #FEB2B2; border-radius: 8px;
-    padding: 12px 16px; font-size: 13px; color: #C53030; margin-bottom: 24px; text-align: center;
-  }
-
-  /* Modal Popup Styles */
-  .modal-overlay {
-    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(44, 53, 57, 0.6); z-index: 1000;
-    display: none; justify-content: center; align-items: center;
-    opacity: 0; transition: opacity 0.3s ease;
-    backdrop-filter: blur(2px);
-  }
-  .modal-overlay.show { display: flex; opacity: 1; }
-  .modal-box {
-    background: var(--paper); padding: 28px 24px; border-radius: 16px;
-    width: 90%; max-width: 400px; box-shadow: 0 16px 40px rgba(0,0,0,0.15);
-    transform: translateY(30px); transition: transform 0.3s ease;
-  }
-  .modal-overlay.show .modal-box { transform: translateY(0); }
-  .modal-title { 
-    margin: 0 0 16px; font-family: 'Cinzel', serif; font-size: 22px; 
-    color: var(--ink); border-bottom: 1px solid var(--line); padding-bottom: 16px; text-align: center;
-  }
-  .modal-detail-row { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 15px; }
-  .modal-detail-label { color: var(--ink-soft); flex-shrink: 0; }
-  .modal-detail-value { font-weight: 600; color: var(--ink); text-align: right; margin-left: 16px; word-break: break-word; }
-  .modal-actions { display: flex; gap: 12px; margin-top: 28px; }
-  
-  .btn-cancel { 
-    flex: 1; padding: 14px; border-radius: 8px; border: 1px solid var(--line); 
-    background: #FAFAFA; cursor: pointer; font-weight: 600; color: var(--ink-soft); transition: 0.2s;
-  }
-  .btn-confirm { 
-    flex: 1.5; padding: 14px; border-radius: 8px; border: none; 
-    background: var(--success); color: #FFF; cursor: pointer; font-weight: 600; 
-    box-shadow: 0 4px 12px rgba(110, 139, 74, 0.3); transition: 0.2s;
-  }
-  .btn-cancel:hover { background: #F0F0F0; color: var(--ink); }
-  .btn-confirm:hover { background: #5a753c; transform: translateY(-1px); }
-  .btn-confirm:disabled { background: var(--line); color: var(--ink-soft); cursor: not-allowed; box-shadow: none; transform: none; }
-
-  /* Quantity stepper */
-  .qty-row { display: flex; align-items: center; gap: 14px; }
-  .qty-btn {
-    width: 42px; height: 42px; border-radius: 8px; border: 1px solid var(--line);
-    background: #FAFAFA; font-size: 18px; font-weight: 600; cursor: pointer;
-    color: var(--ink); transition: all 0.2s; line-height: 1;
-  }
-  .qty-btn:hover { border-color: var(--gold); color: var(--gold-dark); background: rgba(197,160,89,0.08); }
-  .qty-btn:active { transform: scale(0.95); }
-  .qty-value { min-width: 36px; text-align: center; font-size: 18px; font-weight: 700; color: var(--ink); }
-
-  .add-cart-btn {
-    width: 100%; background: var(--paper); color: var(--gold-dark); border: 2px solid var(--gold);
-    border-radius: 8px; padding: 14px; font-size: 15px; font-weight: 600; font-family: inherit; cursor: pointer;
-    margin-top: 12px; transition: all 0.2s; text-transform: uppercase; letter-spacing: 1px;
-  }
-  .add-cart-btn:hover { background: rgba(197,160,89,0.1); box-shadow: 0 4px 12px rgba(197,160,89,0.2); }
-
-  /* Cart */
-  .cart-item-card { background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; display: flex; justify-content: space-between; gap: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
-  .cart-item-main { flex: 1; min-width: 0; }
-  .cart-item-name { font-weight: 600; font-size: 15px; margin: 0 0 4px; color: var(--ink); display:flex; align-items:center; gap:8px; flex-wrap: wrap; }
-  .cart-item-group-tag { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 5px; background: rgba(197,160,89,0.12); color: var(--gold-dark); letter-spacing: 0.3px; }
-  .cart-item-detail { font-size: 13px; color: var(--ink-soft); margin: 0 0 6px; line-height: 1.5; }
-  .cart-item-price { font-size: 14px; font-weight: 700; color: var(--gold-dark); }
-
-  .cart-total-bar {
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 14px 18px; background: rgba(197, 160, 89, 0.08); border: 1px solid rgba(197, 160, 89, 0.25);
-    border-radius: 10px; margin-top: 14px; font-weight: 700; font-size: 16px; color: var(--ink);
-  }
-  .cart-total-bar span:last-child { color: var(--gold-dark); font-size: 18px; }
-
-  .modal-item-list { max-height: 280px; overflow-y: auto; margin-bottom: 8px; }
-  .modal-item-row { display: flex; justify-content: space-between; gap: 10px; padding: 12px 0; border-bottom: 1px dashed var(--line); }
-  .modal-item-row:last-child { border-bottom: none; }
-  .modal-item-info { min-width: 0; }
-  .modal-item-info .mi-name { font-weight: 600; font-size: 14px; color: var(--ink); margin: 0 0 2px; }
-  .modal-item-info .mi-detail { font-size: 12px; color: var(--ink-soft); line-height: 1.5; }
-  .modal-item-info .mi-group { font-size: 11px; color: var(--gold-dark); font-weight: 600; }
-  .modal-item-price { font-weight: 600; color: var(--ink); white-space: nowrap; align-self: flex-start; }
-</style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
 </head>
 <body>
-<div class="wrap">
+<x-dc>
+<helmet data-dc-atomics="">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0f172a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&amp;family=Oswald:wght@500;600&amp;display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0b1220; --surface:#141d2e; --surface2:#1b2739; --surface3:#243147;
+  --line:#2b3a53; --text:#f1f5f9; --dim:#94a3b8; --dim2:#64748b;
+  --accent:#fbbf24; --accent-ink:#1a1300; --accent-soft:rgba(251,191,36,.14);
+  --ok:#2dd4bf; --ok-ink:#06231f; --danger:#f87171; --shadow:0 10px 30px rgba(0,0,0,.45);
+  --strong:#ffffff;
+}
+:root[data-ot-theme="light"]{
+  --bg:#f2f4f7; --surface:#ffffff; --surface2:#f7f9fc; --surface3:#eef2f7;
+  --line:#dde4ed; --text:#0f172a; --dim:#5b6b80; --dim2:#8a99ab;
+  --accent:#b45309; --accent-ink:#ffffff; --accent-soft:rgba(180,83,9,.10);
+  --ok:#0d9488; --ok-ink:#ffffff; --danger:#dc2626; --shadow:0 10px 30px rgba(15,23,42,.12);
+  --strong:#0f172a;
+}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--text);
+  font-family:'IBM Plex Sans Thai','Noto Sans Thai',system-ui,sans-serif;
+  -webkit-text-size-adjust:100%;overscroll-behavior-y:none}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+button,input,select,textarea{font-family:inherit;color:inherit}
+a{color:var(--accent)}a:hover{color:var(--text)}
+input[type="date"]{color-scheme:dark}
+:root[data-ot-theme="light"] input[type="date"]{color-scheme:light}
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-thumb{background:var(--line);border-radius:6px}
+@keyframes otUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+@keyframes otFade{from{opacity:0}to{opacity:1}}
+</style>
+</helmet>
 
-  <img class="brand-banner" src="logo.jpg" alt="ข้าวมันไก่พรีเมียม" onerror="this.style.display='none'">
+<div style="height:100dvh;max-width:620px;margin:0 auto;display:flex;flex-direction:column;background:var(--bg);position:relative;overflow:hidden">
 
-  <header>
-    <div class="eyebrow">Premium Edition</div>
-    <h1>ใบสั่งข้าวมันไก่</h1>
-    <p>กรุณากรอกรายละเอียดออเดอร์ของคุณด้านล่าง</p>
-  </header>
-
-  <div id="setup-warning" class="setup-warning" style="display:none;">
-    ระบบยังไม่พร้อมใช้งาน กรุณาตั้งค่า SCRIPT_URL
-  </div>
-
-  <div class="ticket">
-    <div class="field">
-      <label>ชื่อผู้สั่ง</label>
-      <input type="text" id="f-name" placeholder="ระบุชื่อของคุณ">
-    </div>
-
-    <div class="field">
-      <label>ส่วน</label>
-      <select id="f-group">
-        <option value="Office">Office (สำนักงาน)</option>
-        <option value="โรงงาน">Factory (โรงงาน)</option>
-      </select>
-    </div>
-
-    <div class="field">
-      <label>ประเภท</label>
-      <div class="toggle-row" id="f-type">
-        <div class="toggle-opt active" data-val="ธรรมดา">ธรรมดา</div>
-        <div class="toggle-opt" data-val="พิเศษทุกอย่าง">พิเศษทุกอย่าง</div>
-        <div class="toggle-opt" data-val="พิเศษตับ">พิเศษตับ</div>
+  <div style="flex: none; background: var(--surface); border-bottom: 1px solid var(--line); padding: calc(env(safe-area-inset-top,0px) + 10px) 14px 10px; display: flex; flex-direction: column; gap: 10px; z-index: 20">
+    <div style="display:flex;align-items:center;gap:10px">
+      <div style="flex:1;min-width:0">
+        <div style="font-family:Oswald,sans-serif;font-size:19px;font-weight:600;letter-spacing:.03em;line-height:1.1">PAINTING OT BOARD</div>
+        <div style="font-size: 11.5px; color: #FF0000; margin-top: 1px">{{ headerSub }}</div>
       </div>
+    </div><div style="display:flex;gap:8px">
+      <input type="date" value="{{ date }}" onChange="{{ onDate }}" style="flex: 1; min-width: 0; height: 35px; padding: 0 12px; border-radius: 12px; border: 1px solid var(--line); background: var(--surface2); font-size: 15px; font-weight: 500">
     </div>
-
-    <div class="field">
-      <label>ตัวเลือกอื่นๆ <span class="hint">(เลือกได้หลายอย่าง)</span></label>
-      <div class="chips" id="f-extra">
-        <div class="chip" data-val="ข้าวน้อย">ข้าวน้อย</div>
-        <div class="chip" data-val="เพิ่มน้ำจิ้ม">เพิ่มน้ำจิ้ม</div>
-        <div class="chip" data-val="เนื้อล้วน">เนื้อล้วน</div>
-        <div class="chip" data-val="ไม่มีตับ">ไม่มีตับ</div>
-        <div class="chip" data-val="ไม่เอาเลือด">ไม่เอาเลือด</div>
-      </div>
-    </div>
-
-    <div class="field">
-      <label>หมายเหตุเพิ่มเติม <span class="hint">(Optional)</span></label>
-      <textarea id="f-note" placeholder="ข้อความเพิ่มเติม..."></textarea>
-    </div>
-
-    <div class="field">
-      <label>จำนวน</label>
-      <div class="qty-row">
-        <button type="button" class="qty-btn" id="qty-minus">&minus;</button>
-        <span class="qty-value" id="qty-value">1</span>
-        <button type="button" class="qty-btn" id="qty-plus">+</button>
-      </div>
-    </div>
-
-    <div class="field" style="margin-bottom:24px; text-align: center;">
-      <span class="price-tag" id="f-price-tag">ราคาสุทธิ 50 บาท</span>
-    </div>
-
-    <button class="add-cart-btn" id="f-add-cart">🛒 เพิ่มลงตะกร้า</button>
-    <div class="status-msg" id="f-status"></div>
-  </div>
-
-  <div class="group-section">
-    <div class="group-head">
-      <h2>🛒 ตะกร้าของคุณ</h2>
-      <div class="group-meta">
-        <span class="count-badge" id="cart-count">0 รายการ</span>
-      </div>
-    </div>
-    <div class="order-list" id="cart-list">
-      <div class="empty-state">ยังไม่มีรายการในตะกร้า เลือกเมนูแล้วกด "เพิ่มลงตะกร้า"</div>
-    </div>
-    <div class="cart-total-bar" id="cart-total-bar" style="display:none;">
-      <span>รวมทั้งหมด</span>
-      <span id="cart-total">฿0</span>
-    </div>
-    <button class="submit-btn" id="cart-checkout-btn" style="margin-top:16px; display:none;">ยืนยันออเดอร์ทั้งหมด</button>
-  </div>
-
-  <div class="divider">รายการออเดอร์วันนี้</div>
-
-  <div class="group-section">
-    <div class="group-head">
-      <h2>Office Orders</h2>
-      <div class="group-meta">
-        <span class="count-badge" id="office-count">0</span>
-        <span class="sum-badge" id="office-sum">฿0</span>
-      </div>
-    </div>
-    <div class="order-list" id="office-list">
-      <div class="empty-state">ยังไม่มีรายการสั่งซื้อจาก Office</div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:5px">
+      <sc-for list="{{ shiftTabs }}" as="s" hint-placeholder-count="4">
+        <button onClick="{{ s.onPick }}" style="{{ s.style }}">
+          <span style="font-size: clamp(13px, 3.9vw, 16px); font-weight: 600; line-height: 1.1">{{ s.label }}</span>
+          <span style="{{ s.timeStyle }}">{{ s.time }}</span>
+        </button>
+      </sc-for>
     </div>
   </div>
 
-  <div class="group-section">
-    <div class="group-head">
-      <h2>Factory Orders</h2>
-      <div class="group-meta">
-        <span class="count-badge" id="factory-count">0</span>
-        <span class="sum-badge" id="factory-sum">฿0</span>
+  <div style="flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding:12px 14px 28px">
+
+    <sc-if value="{{ isBoard }}" hint-placeholder-val="{{ true }}">
+      <div style="display:flex;flex-direction:column;gap:12px">
+
+        <div style="display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:14px;background:var(--surface);border:1px solid var(--line)">
+          <div style="flex:1 1 120px;min-width:0">
+            <div style="font-size:12px;color:var(--strong)">จัดจุดแล้ว</div>
+            <div style="font-family:Oswald,sans-serif;font-size:22px;font-weight:600;line-height:1.15">{{ filledLabel }}</div>
+          </div>
+          <div style="flex:1 1 60px;max-width:120px;height:8px;border-radius:99px;background:var(--surface3);overflow:hidden">
+            <div style="{{ progressStyle }}"></div>
+          </div>
+          <button onClick="{{ toggleAll }}" style="flex:none;height:38px;padding:0 12px;border-radius:10px;border:1px solid var(--line);background:var(--surface2);font-size:12px;font-weight:600;cursor:pointer">{{ toggleAllLabel }}</button>
+        </div>
+
+        <sc-if value="{{ hasAnyFilled }}" hint-placeholder-val="{{ false }}">
+          <button onClick="{{ clearAllZones }}" style="width:100%;height:44px;border-radius:12px;border:1px solid var(--danger);background:transparent;color:var(--danger);font-size:13.5px;font-weight:700;cursor:pointer">ล้างทั้งหมดทุกจุด</button>
+        </sc-if>
+
+        <sc-if value="{{ armed }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:14px;background:var(--accent-soft);border:1px solid var(--accent);animation:otFade .18s ease">
+            <div style="flex:1;min-width:0;font-size:13.5px;line-height:1.35">แตะจุดที่จะวาง <b>{{ armedName }}</b></div>
+            <button onClick="{{ disarm }}" style="flex:none;height:38px;padding:0 14px;border-radius:10px;border:1px solid var(--line);background:var(--surface);font-size:13px;font-weight:600;cursor:pointer">ยกเลิก</button>
+          </div>
+        </sc-if>
+
+        <div style="padding:12px 14px;border-radius:14px;background:var(--surface);border:1px dashed var(--line)">
+          <div style="font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--strong);font-family:Oswald,sans-serif;margin-bottom:9px">รอจัด · {{ poolCount }} คน</div>
+          <sc-if value="{{ hasPool }}" hint-placeholder-val="{{ true }}">
+            <div style="display:flex;flex-wrap:wrap;gap:8px">
+              <sc-for list="{{ pool }}" as="p" hint-placeholder-count="3">
+                <button onClick="{{ p.onArm }}" style="{{ p.style }}">{{ p.name }}</button>
+              </sc-for>
+            </div>
+          </sc-if>
+          <sc-if value="{{ poolEmpty }}" hint-placeholder-val="{{ false }}">
+            <div style="font-size:13.5px;line-height:1.5;color:var(--strong)">ทุกคนถูกจัดจุดแล้ว — แตะพนักงานในบอร์ดเพื่อสลับจุด</div>
+          </sc-if>
+        </div>
+
+        <sc-for list="{{ zones }}" as="z" hint-placeholder-count="8">
+          <div style="border-radius:14px;background:var(--surface);border:1px solid var(--line);overflow:hidden">
+            <div style="{{ z.headStyle }}">
+              <button onClick="{{ z.onToggle }}" style="{{ z.toggleStyle }}">
+                <span style="{{ z.titleStyle }}">{{ z.name }}</span>
+                <span style="{{ z.countStyle }}">{{ z.countLabel }}</span>
+                <span style="{{ z.chevron }}">›</span>
+              </button>
+              <sc-if value="{{ z.hasFilled }}" hint-placeholder-val="{{ false }}">
+                <button onClick="{{ z.onClear }}" style="{{ z.clearStyle }}">ล้างทั้งหมด</button>
+              </sc-if>
+            </div>
+            <sc-if value="{{ z.open }}" hint-placeholder-val="{{ true }}">
+              <div style="padding:10px 10px 10px;display:flex;flex-direction:column;gap:8px">
+                <sc-for list="{{ z.stations }}" as="st" hint-placeholder-count="3">
+                  <button onClick="{{ st.onTap }}" style="{{ st.style }}">
+                    <span style="{{ st.avatar }}">{{ st.initial }}</span>
+                    <span style="{{ st.nameStyle }}">{{ st.empLabel }}</span>
+                    <span style="flex:0 0 auto;display:flex;flex-direction:column;align-items:flex-end;gap:3px">
+                      <span style="{{ st.subStyle }}">{{ st.name }}</span>
+                      <span style="{{ st.codeStyle }}">{{ st.code }}</span>
+                    </span>
+                  </button>
+                </sc-for>
+              </div>
+            </sc-if>
+          </div>
+        </sc-for>
       </div>
-    </div>
-    <div class="order-list" id="factory-list">
-      <div class="empty-state">ยังไม่มีรายการสั่งซื้อจากโรงงาน</div>
-    </div>
+    </sc-if>
+
+    <sc-if value="{{ isPeople }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="display:flex;align-items:center;gap:10px">
+          <div style="flex:1;min-width:0;font-size:12px;color:var(--strong)">พนักงานทั้งหมด {{ empCount }} คน</div>
+          <button onClick="{{ addEmp }}" style="flex:none;height:44px;padding:0 16px;border-radius:12px;border:none;background:var(--accent);color:var(--accent-ink);font-size:14px;font-weight:600;cursor:pointer">+ เพิ่มพนักงาน</button>
+        </div>
+        <sc-for list="{{ people }}" as="p" hint-placeholder-count="8">
+          <button onClick="{{ p.onEdit }}" style="{{ p.style }}">
+            <span style="{{ p.avatar }}">{{ p.initial }}</span>
+            <span style="flex:1;min-width:0;display:flex;flex-direction:column;align-items:flex-start;gap:2px">
+              <span style="{{ p.nameStyle }}">{{ p.name }}</span>
+              <span style="{{ p.subStyle }}">{{ p.sub }}</span>
+            </span>
+            <span style="{{ p.chevron }}">›</span>
+          </button>
+        </sc-for>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isMsg }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div style="padding:14px;border-radius:14px;background:var(--surface);border:1px solid var(--line)">
+          <div style="font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);font-family:Oswald,sans-serif;margin-bottom:10px">ข้อความแจ้งไลน์</div>
+          <textarea readOnly="{{ true }}" value="{{ message }}" onChange="{{ noop }}" style="width:100%;min-height:300px;padding:12px;border-radius:12px;border:1px solid var(--line);background:var(--surface2);font-size:14px;line-height:1.6;white-space:pre-wrap;resize:vertical"></textarea>
+        </div>
+        <button onClick="{{ copyMsg }}" style="width:100%;height:54px;border-radius:14px;border:none;background:var(--accent);color:var(--accent-ink);font-size:16px;font-weight:700;cursor:pointer">คัดลอกข้อความ</button>
+        <button onClick="{{ sendMsg }}" style="{{ sendStyle }}">{{ sendLabel }}</button>
+        <button onClick="{{ openSettings }}" style="width:100%;height:48px;border-radius:14px;border:1px solid var(--line);background:var(--surface);font-size:14px;font-weight:600;cursor:pointer">ตั้งค่าการส่ง (GitHub)</button>
+        <div style="font-size:11.5px;color:var(--dim2);line-height:1.5;padding:0 2px">โทเคนถูกเก็บไว้ในเครื่องของคุณเท่านั้น (localStorage) ไม่ได้ฝังอยู่ในหน้าเว็บ</div>
+      </div>
+    </sc-if>
+  </div><div style="flex:none;display:grid;grid-template-columns:repeat(3,1fr);gap:4px;background:var(--surface);border-top:1px solid var(--line);padding:6px 8px calc(env(safe-area-inset-bottom,0px) + 6px);z-index:20">
+    <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="3">
+      <button onClick="{{ t.onPick }}" style="{{ t.style }}">
+        <span style="font-size:19px;line-height:1">{{ t.icon }}</span>
+        <span style="font-size:11.5px;font-weight:600;letter-spacing:.02em">{{ t.label }}</span>
+      </button>
+    </sc-for>
   </div>
 
-  <button class="refresh-btn" id="refresh-btn">รีเฟรชข้อมูลล่าสุด</button>
+  <sc-if value="{{ sheetOpen }}" hint-placeholder-val="{{ false }}">
+    <div style="position:absolute;inset:0;z-index:60;display:flex;flex-direction:column;justify-content:flex-end">
+      <div onClick="{{ closeSheet }}" style="position:absolute;inset:0;background:rgba(2,6,16,.62);backdrop-filter:blur(3px);animation:otFade .16s ease"></div>
+      <div style="position:relative;background:var(--surface);border-radius:20px 20px 0 0;border-top:1px solid var(--line);box-shadow:var(--shadow);max-height:88%;display:flex;flex-direction:column;animation:otUp .22s cubic-bezier(.22,.9,.3,1)">
+        <div style="flex:none;display:flex;align-items:center;gap:10px;padding:14px 16px 10px;border-bottom:1px solid var(--line)">
+          <div style="flex:1;min-width:0">
+            <div style="font-size:16px;font-weight:700;line-height:1.25">{{ sheetTitle }}</div>
+            <div style="font-size:12px;color:var(--dim);margin-top:2px">{{ sheetSub }}</div>
+          </div>
+          <button onClick="{{ closeSheet }}" style="flex:none;width:40px;height:40px;border-radius:12px;border:1px solid var(--line);background:var(--surface2);font-size:16px;cursor:pointer">✕</button>
+        </div>
+        <div style="flex:1;min-height:0;overflow-y:auto;padding:12px 16px calc(env(safe-area-inset-bottom,0px) + 18px);display:flex;flex-direction:column;gap:9px">
 
+          <sc-if value="{{ sheetIsStation }}" hint-placeholder-val="{{ false }}">
+            <sc-if value="{{ stationHasEmp }}" hint-placeholder-val="{{ false }}">
+              <button onClick="{{ unassign }}" style="display:flex;align-items:center;gap:10px;width:100%;min-height:52px;padding:0 14px;border-radius:12px;border:1px solid var(--danger);background:transparent;color:var(--danger);font-size:14.5px;font-weight:600;cursor:pointer">ดึง {{ stationEmpName }} กลับไปรอจัด</button>
+            </sc-if>
+            <div style="font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);font-family:Oswald,sans-serif;margin:6px 0 2px">เลือกพนักงาน</div>
+            <sc-for list="{{ pickList }}" as="p" hint-placeholder-count="5">
+              <button onClick="{{ p.onPick }}" style="{{ p.style }}">
+                <span style="{{ p.avatar }}">{{ p.initial }}</span>
+                <span style="flex:1;min-width:0;display:flex;flex-direction:column;align-items:flex-start;gap:1px">
+                  <span style="{{ p.nameStyle }}">{{ p.name }}</span>
+                  <span style="{{ p.subStyle }}">{{ p.sub }}</span>
+                </span>
+              </button>
+            </sc-for>
+          </sc-if>
+
+          <sc-if value="{{ sheetIsEmp }}" hint-placeholder-val="{{ false }}">
+            <label style="font-size:12px;color:var(--dim)">ชื่อพนักงาน</label>
+            <input type="text" value="{{ draftName }}" onChange="{{ onDraftName }}" style="width:100%;height:50px;padding:0 13px;border-radius:12px;border:1px solid var(--line);background:var(--surface2);font-size:16px">
+            <label style="font-size:12px;color:var(--dim);margin-top:4px">รหัสพนักงาน</label>
+            <input type="text" value="{{ draftCode }}" onChange="{{ onDraftCode }}" style="width:100%;height:50px;padding:0 13px;border-radius:12px;border:1px solid var(--line);background:var(--surface2);font-size:16px">
+            <label style="font-size:12px;color:var(--dim);margin-top:4px">จุดเริ่มต้น (Default)</label>
+            <select value="{{ draftPoint }}" onChange="{{ onDraftPoint }}" style="width:100%;height:50px;padding:0 10px;border-radius:12px;border:1px solid var(--line);background:var(--surface2);font-size:15px">
+              <option value="">— ไม่มีจุด (รอจัด) —</option>
+              <sc-for list="{{ flatPoints }}" as="fp" hint-placeholder-count="6">
+                <option value="{{ fp.id }}">{{ fp.label }}</option>
+              </sc-for>
+            </select>
+            <button onClick="{{ saveDraft }}" style="width:100%;height:54px;margin-top:10px;border-radius:14px;border:none;background:var(--accent);color:var(--accent-ink);font-size:16px;font-weight:700;cursor:pointer">บันทึก</button>
+            <button onClick="{{ deleteDraft }}" style="width:100%;height:50px;border-radius:14px;border:1px solid var(--danger);background:transparent;color:var(--danger);font-size:14.5px;font-weight:600;cursor:pointer">ลบพนักงานคนนี้</button>
+          </sc-if>
+
+          <sc-if value="{{ sheetIsSettings }}" hint-placeholder-val="{{ false }}">
+            <label style="font-size:12px;color:var(--dim)">GitHub owner</label>
+            <input type="text" value="{{ cfgOwner }}" onChange="{{ onCfgOwner }}" placeholder="picture-Mchic" style="width:100%;height:50px;padding:0 13px;border-radius:12px;border:1px solid var(--line);background:var(--surface2);font-size:16px">
+            <label style="font-size:12px;color:var(--dim);margin-top:4px">Repository</label>
+            <input type="text" value="{{ cfgRepo }}" onChange="{{ onCfgRepo }}" placeholder="OT.paint" style="width:100%;height:50px;padding:0 13px;border-radius:12px;border:1px solid var(--line);background:var(--surface2);font-size:16px">
+            <label style="font-size:12px;color:var(--dim);margin-top:4px">Event type</label>
+            <input type="text" value="{{ cfgEvent }}" onChange="{{ onCfgEvent }}" placeholder="ot_message" style="width:100%;height:50px;padding:0 13px;border-radius:12px;border:1px solid var(--line);background:var(--surface2);font-size:16px">
+            <label style="font-size:12px;color:var(--dim);margin-top:4px">Personal access token</label>
+            <input type="password" value="{{ cfgToken }}" onChange="{{ onCfgToken }}" placeholder="github_pat_…" style="width:100%;height:50px;padding:0 13px;border-radius:12px;border:1px solid var(--line);background:var(--surface2);font-size:16px">
+            <div style="font-size:11.5px;color:var(--dim2);line-height:1.55;margin-top:2px">ใช้ Fine-grained PAT ที่ให้สิทธิ์เฉพาะรีโปนี้ (Contents: read and write) โทเคนเก็บอยู่ในเครื่องนี้เครื่องเดียว</div>
+            <div style="font-size:11.5px;color:var(--dim2);line-height:1.55">ข้อมูลพนักงานและบอร์ดจะซิงค์ขึ้น-ลง GitHub อัตโนมัติ ทุกเครื่องที่เปิดลิงก์นี้และตั้งค่าเดียวกันจะเห็นข้อมูลชุดเดียวกัน</div>
+            <button onClick="{{ saveCfg }}" style="width:100%;height:54px;margin-top:10px;border-radius:14px;border:none;background:var(--accent);color:var(--accent-ink);font-size:16px;font-weight:700;cursor:pointer">บันทึกการตั้งค่า</button>
+            <button onClick="{{ manualSync }}" style="width:100%;height:48px;border-radius:14px;border:1px solid var(--line);background:var(--surface);font-size:14px;font-weight:600;cursor:pointer">รีเฟรชข้อมูลล่าสุดจาก GitHub</button>
+          </sc-if>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ hasToast }}" hint-placeholder-val="{{ false }}">
+    <div style="{{ toastStyle }}">{{ toastText }}</div>
+  </sc-if>
 </div>
 
-<!-- Modal ยืนยันออเดอร์ (ก่อนส่ง) -->
-<div class="modal-overlay" id="confirm-modal">
-  <div class="modal-box">
-    <h3 class="modal-title">ยืนยันรายการสั่งอาหาร</h3>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:390,&quot;height&quot;:844}}">
+const SHIFTS = [
+  { id:'morning', label:'เช้า', time:'7:00-8:00', color:'#2dd4bf', ink:'#06231f' },
+  { id:'evening', label:'เย็น', time:'17:00-20:00', color:'#fbbf24', ink:'#1a1300' },
+  { id:'night', label:'ดึก', time:'20:00-21:00', color:'#818cf8', ink:'#ffffff' },
+  { id:'holiday', label:'วันหยุด', time:'8:00-17:00', color:'#ef4444', ink:'#ffffff' },
+];
 
-    <div class="modal-item-list" id="md-item-list"></div>
+// `dark` = zone colour is light enough that black ink reads better than white.
+const ZONE_DEFS = [
+  { zone:'Supervisor Team', color:'#f59e0b', dark:true, pts:[['p-sv1','Foreman'],['p-sv2','Inside Leader'],['p-sv3','Outside Leader']] },
+  { zone:'A Line', color:'#2563eb', dark:false, pts:[['p-a1','Receiving'],['p-a2','Air Jeter'],['p-a3','Loading'],['p-a4','Inspection 1'],['p-a5','Inspection 2']] },
+  { zone:'B Line', color:'#7c3aed', dark:false, pts:[['p-b1','Receiving'],['p-b2','Air Jeter'],['p-b3','Loading'],['p-b4','Inspection 1'],['p-b5','Inspection 2']] },
+  { zone:'Supply', color:'#10b981', dark:true, pts:[['p-su1','Supply']] },
+  { zone:'Mixing Room', color:'#d97706', dark:true, pts:[['p-mx1','A Line'],['p-mx2','B Line']] },
+  { zone:'Packing', color:'#db2777', dark:false, pts:[['p-pk1','Packing 1'],['p-pk2','Packing 2'],['p-pk3','Packing 3'],['p-pk4','Packing 4']] },
+  { zone:'Polishing', color:'#14b8a6', dark:true, pts:[['p-po1','Polishing']] },
+  { zone:'Jig Cleaning', color:'#dc2626', dark:false, pts:[['p-jc1','Jig Cleaning']] },
+];
 
-    <div class="modal-detail-row" style="margin-top: 4px; border-top: 1px dashed var(--line); padding-top: 16px;">
-      <span class="modal-detail-label" style="color: var(--ink); font-weight: 600;">ราคาสุทธิ:</span>
-      <span class="modal-detail-value" id="md-price" style="color: var(--success); font-size: 18px;"></span>
-    </div>
+// จุดที่รับได้ 2 คนต่อจุด (Jig Cleaning + Packing 1-4) — จุดอื่นยังคงรับได้ 1 คนตามเดิม
+const MULTI_CAP_IDS = new Set(['p-jc1', 'p-pk1', 'p-pk2', 'p-pk3', 'p-pk4']);
+function capOf(id) { return MULTI_CAP_IDS.has(id) ? 2 : 1; }
 
-    <div class="modal-actions">
-      <button class="btn-cancel" id="btn-cancel-modal">กลับไปแก้ไข</button>
-      <button class="btn-confirm" id="btn-confirm-modal">ยืนยันออเดอร์</button>
-    </div>
-  </div>
-</div>
-
-<!-- Modal ขอบคุณ (หลังส่งสำเร็จ) -->
-<div class="modal-overlay" id="success-modal">
-  <div class="modal-box" style="text-align: center; padding: 32px 24px;">
-    <img src="ChatGPT Image 7 ส.ค. 2569 09_42_14.png" alt="ขอบคุณครับ" 
-         style="width: 100%; max-width: 220px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 4px 16px rgba(0,0,0,0.1); object-fit: cover;"
-         onerror="this.style.display='none'">
-    <h3 style="font-family: 'Noto Sans Thai', sans-serif; color: var(--success); margin: 0 0 8px; font-size: 24px; font-weight: 600;">ขอบคุณครับ!</h3>
-    <p style="color: var(--ink-soft); margin: 0 0 24px; font-size: 15px;" id="success-msg">รับออเดอร์เรียบร้อยแล้ว</p>
-    <button class="btn-confirm" id="btn-close-success" style="width: 100%; background: var(--gold); box-shadow: 0 4px 12px rgba(197, 160, 89, 0.3);">กลับสู่หน้าหลัก</button>
-  </div>
-</div>
-
-<script>
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwDtjz8oMdSEnnt6gqQAk5UQk-F12PSIFnq-0SsQaD1x5zNbD53Uyof4qoipFcpA_H4yw/exec';
-
-let selectedExtras = new Set();
-let state = { type: 'ธรรมดา', qty: 1 };
-let cart = []; // รายการที่ถูกเพิ่มลงตะกร้า รอกดยืนยันส่งทั้งหมด
-let cartUid = 0;
-
-if (!SCRIPT_URL || SCRIPT_URL.indexOf('PASTE_YOUR') === 0) {
-  document.getElementById('setup-warning').style.display = 'block';
+// Ink set for text sitting on a solid zone colour.
+function ink(zd) {
+  return zd && zd.dark
+    ? { c1:'rgba(0,0,0,.88)', c2:'rgba(0,0,0,.7)', c3:'rgba(0,0,0,.62)', chip:'rgba(0,0,0,.13)', chip2:'rgba(0,0,0,.2)' }
+    : { c1:'#ffffff', c2:'rgba(255,255,255,.9)', c3:'rgba(255,255,255,.82)', chip:'rgba(255,255,255,.24)', chip2:'rgba(0,0,0,.24)' };
 }
 
-function setQty(n){
-  state.qty = Math.max(1, Math.min(20, n));
-  document.getElementById('qty-value').textContent = state.qty;
-  updatePriceTag();
-}
-document.getElementById('qty-minus').addEventListener('click', () => setQty(state.qty - 1));
-document.getElementById('qty-plus').addEventListener('click', () => setQty(state.qty + 1));
+const DEFAULT_POINTS = ZONE_DEFS.flatMap(z => z.pts.map(([id, name]) => ({ id, zone: z.zone, name, cap: capOf(id) })));
 
-function setupToggleRow(containerId, stateKey){
-  const container = document.getElementById(containerId);
-  container.querySelectorAll('.toggle-opt').forEach(opt => {
-    opt.addEventListener('click', () => {
-      container.querySelectorAll('.toggle-opt').forEach(o => o.classList.remove('active'));
-      opt.classList.add('active');
-      state[stateKey] = opt.dataset.val;
-      updatePriceTag();
-    });
+const DEFAULT_EMPLOYEES = [
+  ['e01','ปรีชา','ๆ','p-sv1'], ['e02','เจมส์','ฟฟ','p-sv2'], ['e03','เจี๊ยบ','000','p-sv3'],
+  ['e04','เนย','EMP001','p-a1'], ['e05','รุ่ง','EMP002','p-a2'], ['e06','สันติ','EMP003','p-a3'],
+  ['e07','ภัค','EMP004','p-a4'], ['e08','บีม','EMP005','p-a5'],
+  ['e09','ฝ้าย','EMP006','p-b1'], ['e10','หมิว','EMP007','p-b2'], ['e11','มิว','EMP008','p-b3'],
+  ['e12','แก้ม','EMP009','p-b4'], ['e13','เอ๋','EMP010','p-b5'],
+  ['e14','อาร์ม','EMP011','p-su1'], ['e15','รุต','EMP012','p-mx1'], ['e16','โบ๊ต','EMP013','p-mx2'],
+  ['e17','อี๊ด','EMP014','p-pk1'], ['e18','ตั๊ก','EMP015','p-pk2'], ['e19','วา','EMP016','p-pk3'],
+  ['e20','ฟ้า','EMP017','p-pk4'], ['e21','กร','EMP018','p-po1'], ['e22','ตั้ม','EMP019','p-jc1'],
+].map(([id, name, empCode, defaultPoint]) => ({ id, name, empCode, defaultPoint }));
+
+const TPL = {
+  header: '📋 แจ้งเข้า OT \nวัน {date}\nเวลา : {shift}\n————————',
+  footer: '————————\nพนักงานทำโอทีทั้งหมด {ot_count} คน\nหัวหน้างาน {supervisor_count} คน\nไม่ทำโอที {non_ot_count} คน',
+};
+
+const K = 'otm.v3.';
+const THAI_DAYS = ['อาทิตย์','จันทร์','อังคาร','พุธ','พฤหัสบดี','ศุกร์','เสาร์'];
+
+// ไฟล์ข้อมูลกลางที่เก็บบน GitHub repo (ชื่อพนักงาน + บอร์ดของทุกกะ)
+// ทุกเครื่องที่เปิดลิงก์เดียวกันจะอ่าน/เขียนไฟล์นี้ร่วมกัน แทนการใช้ localStorage ของตัวเองล้วน ๆ
+const GH_DATA_PATH = 'data/ot-board.json';
+
+function utf8ToB64(str) {
+  return btoa(unescape(encodeURIComponent(str)));
+}
+function b64ToUtf8(str) {
+  return decodeURIComponent(escape(atob(String(str || '').replace(/\n/g, ''))));
+}
+
+// อ่านไฟล์ข้อมูลกลางจาก GitHub. ไม่ใส่ token ก็อ่านได้ถ้ารีโปเป็น public (แต่จะติด rate limit ต่ำกว่า)
+async function ghGetData(cfg) {
+  const url = 'https://api.github.com/repos/' + cfg.owner + '/' + cfg.repo + '/contents/' + GH_DATA_PATH;
+  const headers = { Accept: 'application/vnd.github+json' };
+  if (cfg.token) headers.Authorization = 'Bearer ' + cfg.token;
+  const res = await fetch(url, { headers });
+  if (res.status === 404) return { sha: null, data: null };
+  if (!res.ok) { let d = ''; try { d = (await res.json()).message || ''; } catch (e) {} throw new Error('GET ' + res.status + ' ' + d); }
+  const json = await res.json();
+  const data = JSON.parse(b64ToUtf8(json.content));
+  return { sha: json.sha, data };
+}
+
+// เขียนไฟล์ข้อมูลกลางกลับไปที่ GitHub. ต้องมี token ที่มีสิทธิ์เขียนรีโปนี้
+async function ghPutData(cfg, dataObj, sha) {
+  if (!cfg.token) throw new Error('no-token');
+  const url = 'https://api.github.com/repos/' + cfg.owner + '/' + cfg.repo + '/contents/' + GH_DATA_PATH;
+  const body = {
+    message: 'Update OT board data',
+    content: utf8ToB64(JSON.stringify(dataObj, null, 2)),
+  };
+  if (sha) body.sha = sha;
+  const res = await fetch(url, {
+    method: 'PUT',
+    headers: { Accept: 'application/vnd.github+json', Authorization: 'Bearer ' + cfg.token, 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
   });
-}
-setupToggleRow('f-type', 'type');
-
-document.querySelectorAll('#f-extra .chip').forEach(chip => {
-  chip.addEventListener('click', () => {
-    const val = chip.dataset.val;
-    if (selectedExtras.has(val)) { selectedExtras.delete(val); chip.classList.remove('active'); }
-    else { selectedExtras.add(val); chip.classList.add('active'); }
-  });
-});
-
-function currentPrice(){
-  return (state.type === 'พิเศษทุกอย่าง' || state.type === 'พิเศษตับ') ? 60 : 50;
+  if (!res.ok) { let d = ''; try { d = (await res.json()).message || ''; } catch (e) {} throw new Error('PUT ' + res.status + ' ' + d); }
+  const json = await res.json();
+  return json.content.sha;
 }
 
-function updatePriceTag(){
-  const unit = currentPrice();
-  const qty = state.qty || 1;
-  const total = unit * qty;
-  document.getElementById('f-price-tag').textContent = qty > 1
-    ? `ราคาสุทธิ ${unit} x ${qty} = ${total} บาท`
-    : `ราคาสุทธิ ${total} บาท`;
+function lsGet(key, fallback) {
+  try { const v = localStorage.getItem(K + key); return v == null ? fallback : JSON.parse(v); }
+  catch (e) { return fallback; }
 }
-
-function buildDetail(){
-  const parts = [];
-  if (state.type !== 'ธรรมดา') parts.push(state.type);
-  selectedExtras.forEach(v => parts.push(v));
-  const note = document.getElementById('f-note').value.trim();
-  if (note) parts.push(`(${note})`);
-  return parts.join(' • ');
+function lsSet(key, value) {
+  try { localStorage.setItem(K + key, JSON.stringify(value)); } catch (e) {}
 }
-
-function formatTime(iso){
-  const d = new Date(iso);
-  if (isNaN(d.getTime())) return '';
-  return d.toLocaleString('th-TH', { day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' });
+function todayStr() {
+  const d = new Date();
+  return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
 }
-
-function escapeHtml(str){
-  const d = document.createElement('div');
-  d.textContent = str == null ? '' : String(str);
-  return d.innerHTML;
+function thaiDate(iso) {
+  const p = String(iso || '').split('-');
+  if (p.length !== 3) return iso;
+  const d = new Date(Number(p[0]), Number(p[1]) - 1, Number(p[2]));
+  return THAI_DAYS[d.getDay()] + ' ที่ ' + p[2] + '-' + p[1] + '-' + p[0];
 }
+function initial(name) { return (String(name).trim()[0] || '?'); }
+function uid() { return 'e-' + Math.random().toString(36).slice(2, 9); }
 
-function renderList(listEl, countEl, sumEl, orders, emptyText){
-  countEl.textContent = orders.length + ' รายการ';
-  const sum = orders.reduce((acc, o) => acc + (parseFloat(o.price) || 0), 0);
-  sumEl.textContent = `฿${sum}`;
-  if (orders.length === 0) {
-    listEl.innerHTML = `<div class="empty-state">${emptyText}</div>`;
-    return;
-  }
-  listEl.innerHTML = orders.map(o => `
-    <div class="order-card">
-      <div class="order-main">
-        <p class="order-name">${escapeHtml(o.name)}</p>
-        <p class="order-detail">${escapeHtml(o.detail || 'ธรรมดา')} — ฿${escapeHtml(o.price)}</p>
-        <p class="order-time">${formatTime(o.createdAt)}</p>
-      </div>
-      <button class="del-btn" data-id="${escapeHtml(o.id)}" data-group="${escapeHtml(o.__group)}" title="ลบออเดอร์">&times;</button>
-    </div>`).join('');
-  listEl.querySelectorAll('.del-btn').forEach(btn => {
-    btn.addEventListener('click', async () => {
-      try{
-        await fetch(SCRIPT_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify({ action: 'delete', id: btn.dataset.id, group: btn.dataset.group })
-        });
-        loadOrders();
-      }catch(e){}
-    });
-  });
-}
-
-async function loadOrders(){
-  if (!SCRIPT_URL || SCRIPT_URL.indexOf('PASTE_YOUR') === 0) return;
-  try{
-    const res = await fetch(SCRIPT_URL, { method: 'GET' });
-    const data = await res.json();
-    const office = (data.office || []).map(o => ({ ...o, __group: 'Office' }));
-    const factory = (data.factory || []).map(o => ({ ...o, __group: 'โรงงาน' }));
-    renderList(
-      document.getElementById('office-list'),
-      document.getElementById('office-count'),
-      document.getElementById('office-sum'),
-      office, 'ยังไม่มีรายการสั่งซื้อจาก Office'
-    );
-    renderList(
-      document.getElementById('factory-list'),
-      document.getElementById('factory-count'),
-      document.getElementById('factory-sum'),
-      factory, 'ยังไม่มีรายการสั่งซื้อจากโรงงาน'
-    );
-  }catch(e){
-    document.getElementById('office-list').innerHTML = '<div class="empty-state" style="color:var(--danger)">ไม่สามารถโหลดข้อมูลได้</div>';
-  }
-}
-
-// ==== Modal Logic ====
-const confirmModal = document.getElementById('confirm-modal');
-const successModal = document.getElementById('success-modal');
-
-function openConfirmModal() {
-  confirmModal.style.display = 'flex';
-  setTimeout(() => confirmModal.classList.add('show'), 10);
-}
-
-function closeConfirmModal() {
-  confirmModal.classList.remove('show');
-  setTimeout(() => confirmModal.style.display = 'none', 300);
-}
-
-function openSuccessModal(message) {
-  document.getElementById('success-msg').textContent = message;
-  successModal.style.display = 'flex';
-  setTimeout(() => successModal.classList.add('show'), 10);
-}
-
-function closeSuccessModal() {
-  successModal.classList.remove('show');
-  setTimeout(() => successModal.style.display = 'none', 300);
-}
-
-document.getElementById('btn-cancel-modal').addEventListener('click', closeConfirmModal);
-document.getElementById('btn-close-success').addEventListener('click', closeSuccessModal);
-
-// ==== Cart Logic ====
-
-function resetFormAfterAdd(){
-  // ล้างเฉพาะรายละเอียดเมนู (คงชื่อ/ส่วนไว้ เผื่อสั่งต่อให้คนเดิม แก้ชื่อเองได้ถ้าจะสั่งให้คนอื่น)
-  document.getElementById('f-note').value = '';
-  selectedExtras.clear();
-  document.querySelectorAll('#f-extra .chip').forEach(c => c.classList.remove('active'));
-
-  document.querySelectorAll('#f-type .toggle-opt').forEach(o => o.classList.remove('active'));
-  const defaultType = document.querySelector('#f-type .toggle-opt[data-val="ธรรมดา"]');
-  if (defaultType) {
-    defaultType.classList.add('active');
-    state.type = 'ธรรมดา';
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    const points = lsGet('points', DEFAULT_POINTS).map(p => ({ ...p, cap: capOf(p.id) }));
+    const employees = lsGet('employees', DEFAULT_EMPLOYEES);
+    const shift = lsGet('shift', 'morning');
+    const board = this.loadBoard(shift, points, employees);
+    const open = {};
+    ZONE_DEFS.forEach(z => { open[z.zone] = true; });
+    this.state = {
+      tab: 'board', theme: lsGet('theme', 'dark'), shift,
+      points, employees,
+      date: board.date, assignments: board.assignments,
+      open: lsGet('open', open),
+      armed: null, sheet: null, draft: null,
+      cfg: lsGet('cfg', { owner: 'picture-Mchic', repo: 'OT.paint', eventType: 'ot_message', token: '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' }),
+      sending: false, toast: null,
+    };
   }
 
-  setQty(1);
-}
-
-function renderCart(){
-  const listEl = document.getElementById('cart-list');
-  const countEl = document.getElementById('cart-count');
-  const totalBar = document.getElementById('cart-total-bar');
-  const totalEl = document.getElementById('cart-total');
-  const checkoutBtn = document.getElementById('cart-checkout-btn');
-
-  countEl.textContent = cart.length + ' รายการ';
-
-  if (cart.length === 0) {
-    listEl.innerHTML = '<div class="empty-state">ยังไม่มีรายการในตะกร้า เลือกเมนูแล้วกด "เพิ่มลงตะกร้า"</div>';
-    totalBar.style.display = 'none';
-    checkoutBtn.style.display = 'none';
-    return;
+  componentDidMount() {
+    document.documentElement.setAttribute('data-ot-theme', this.state.theme);
+    this._sha = null;
+    this.syncFromGitHub(false);
+    this._poll = setInterval(() => this.syncFromGitHub(true), 25000);
+    this._onVis = () => { if (document.visibilityState === 'visible') this.syncFromGitHub(true); };
+    document.addEventListener('visibilitychange', this._onVis);
   }
 
-  const total = cart.reduce((acc, it) => acc + it.subtotal, 0);
-  totalEl.textContent = `฿${total}`;
-  totalBar.style.display = 'flex';
-  checkoutBtn.style.display = 'block';
-
-  listEl.innerHTML = cart.map(it => `
-    <div class="cart-item-card">
-      <div class="cart-item-main">
-        <p class="cart-item-name">${escapeHtml(it.name)} <span class="cart-item-group-tag">${it.group === 'Office' ? 'Office' : 'Factory'}</span></p>
-        <p class="cart-item-detail">${escapeHtml(it.detail)} ${it.qty > 1 ? `× ${it.qty}` : ''}</p>
-        <p class="cart-item-price">฿${it.subtotal}</p>
-      </div>
-      <button class="del-btn" data-uid="${it.uid}" title="ลบออกจากตะกร้า">&times;</button>
-    </div>`).join('');
-
-  listEl.querySelectorAll('.del-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const uid = Number(btn.dataset.uid);
-      cart = cart.filter(it => it.uid !== uid);
-      renderCart();
-    });
-  });
-}
-
-// เมื่อกดปุ่ม "เพิ่มลงตะกร้า"
-document.getElementById('f-add-cart').addEventListener('click', () => {
-  const nameEl = document.getElementById('f-name');
-  const statusEl = document.getElementById('f-status');
-  const name = nameEl.value.trim();
-
-  if (!name) {
-    statusEl.style.color = 'var(--danger)';
-    statusEl.textContent = 'กรุณาระบุชื่อผู้สั่ง';
-    nameEl.focus();
-    return;
+  componentWillUnmount() {
+    clearInterval(this._poll);
+    document.removeEventListener('visibilitychange', this._onVis);
   }
 
-  statusEl.textContent = '';
-
-  const unitPrice = currentPrice();
-  const qty = state.qty || 1;
-  const baseDetail = buildDetail() || 'ธรรมดา';
-
-  cart.push({
-    uid: ++cartUid,
-    name,
-    group: document.getElementById('f-group').value,
-    type: state.type,
-    extras: Array.from(selectedExtras),
-    note: document.getElementById('f-note').value.trim(),
-    detail: baseDetail,
-    qty,
-    unitPrice,
-    subtotal: unitPrice * qty
-  });
-
-  renderCart();
-  resetFormAfterAdd();
-
-  statusEl.style.color = 'var(--success)';
-  statusEl.textContent = `เพิ่ม "${name}" ลงตะกร้าแล้ว`;
-  setTimeout(() => { if (statusEl.textContent.indexOf('เพิ่ม') === 0) statusEl.textContent = ''; }, 2000);
-});
-
-// เมื่อกดปุ่ม "ยืนยันออเดอร์ทั้งหมด" — เปิด modal สรุปรายการทั้งหมดในตะกร้า
-document.getElementById('cart-checkout-btn').addEventListener('click', () => {
-  if (cart.length === 0) return;
-  if (!SCRIPT_URL || SCRIPT_URL.indexOf('PASTE_YOUR') === 0) {
-    const statusEl = document.getElementById('f-status');
-    statusEl.style.color = 'var(--danger)';
-    statusEl.textContent = 'กรุณาตั้งค่า SCRIPT_URL ก่อนใช้งาน';
-    return;
+  // ดึงข้อมูลล่าสุด (ชื่อพนักงาน + บอร์ดทุกกะ) จาก GitHub มาทับ localStorage ในเครื่องนี้
+  async syncFromGitHub(silent) {
+    const cfg = this.state.cfg;
+    if (!cfg.owner || !cfg.repo) return;
+    try {
+      const { sha, data } = await ghGetData(cfg);
+      this._sha = sha;
+      if (!data) return; // ยังไม่เคยมีไฟล์บนรีโป (ยังไม่มีใครเซฟเลย)
+      if (data.employees) lsSet('employees', data.employees);
+      Object.keys(data.boards || {}).forEach((sh) => lsSet('board.' + sh, data.boards[sh]));
+      const board = this.loadBoard(this.state.shift, this.state.points, data.employees || this.state.employees);
+      this.setState({ employees: data.employees || this.state.employees, assignments: board.assignments, date: board.date });
+      if (!silent) this.flash('ซิงค์ข้อมูลล่าสุดจาก GitHub แล้ว');
+    } catch (e) {
+      if (!silent) this.flash('ดึงข้อมูลจาก GitHub ไม่สำเร็จ: ' + e.message, 'err');
+    }
   }
 
-  const listEl = document.getElementById('md-item-list');
-  listEl.innerHTML = cart.map(it => `
-    <div class="modal-item-row">
-      <div class="modal-item-info">
-        <p class="mi-name">${escapeHtml(it.name)} <span class="mi-group">(${it.group === 'Office' ? 'Office' : 'Factory'})</span></p>
-        <p class="mi-detail">${escapeHtml(it.detail)}${it.qty > 1 ? ` × ${it.qty}` : ''}</p>
-      </div>
-      <div class="modal-item-price">฿${it.subtotal}</div>
-    </div>`).join('');
-
-  const total = cart.reduce((acc, it) => acc + it.subtotal, 0);
-  document.getElementById('md-price').textContent = `฿${total}`;
-
-  openConfirmModal();
-});
-
-// เมื่อกดปุ่ม "ยืนยันออเดอร์" ใน Modal จะส่งทุกรายการในตะกร้าไป Google Script ทีเดียว
-document.getElementById('btn-confirm-modal').addEventListener('click', async () => {
-  if (cart.length === 0) return;
-
-  const confirmBtn = document.getElementById('btn-confirm-modal');
-  const cancelBtn = document.getElementById('btn-cancel-modal');
-  const statusEl = document.getElementById('f-status');
-
-  confirmBtn.disabled = true;
-  confirmBtn.textContent = 'กำลังส่ง...';
-  cancelBtn.style.pointerEvents = 'none';
-
-  const itemsToSend = [...cart];
-  const failed = [];
-
-  try{
-    for (const it of itemsToSend){
-      const payload = {
-        name: it.name,
-        group: it.group,
-        type: it.type,
-        extras: it.extras,
-        note: it.note,
-        detail: it.qty > 1 ? `${it.detail} × ${it.qty}` : it.detail,
-        price: it.subtotal
-      };
-      try{
-        const res = await fetch(SCRIPT_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify(payload)
-        });
-        const result = await res.json();
-        if (!result || !result.success) failed.push(it);
-      }catch(e){
-        failed.push(it);
+  // ส่งข้อมูลปัจจุบัน (ชื่อพนักงาน + บอร์ดทุกกะ) ขึ้น GitHub ให้เครื่องอื่นเห็นด้วย
+  // employeesOverride: ใส่ list ล่าสุดตรง ๆ เวลาที่เพิ่งแก้ไข (กัน state ยังอัปเดตไม่ทัน)
+  async syncToGitHub(employeesOverride) {
+    const cfg = this.state.cfg;
+    if (!cfg.owner || !cfg.repo || !cfg.token) return; // ยังไม่ตั้งค่า token ก็ข้าม (บันทึกในเครื่องนี้อย่างเดียว)
+    const boards = {};
+    SHIFTS.forEach((s) => { boards[s.id] = lsGet('board.' + s.id, null) || { assignments: {}, date: todayStr() }; });
+    const payload = { employees: employeesOverride || lsGet('employees', this.state.employees), boards, updatedAt: new Date().toISOString() };
+    try {
+      this._sha = await ghPutData(cfg, payload, this._sha);
+    } catch (e) {
+      try {
+        const { sha } = await ghGetData(cfg); // ชนกับที่เครื่องอื่นเซฟไปก่อน ลองดึง sha ล่าสุดแล้วเซฟซ้ำ
+        this._sha = await ghPutData(cfg, payload, sha);
+      } catch (e2) {
+        this.flash('ซิงค์ขึ้น GitHub ไม่สำเร็จ (บันทึกในเครื่องนี้แล้ว): ' + e2.message, 'err');
       }
     }
-
-    closeConfirmModal();
-
-    if (failed.length === 0) {
-      const names = [...new Set(itemsToSend.map(it => it.name))];
-      const summary = names.length === 1
-        ? `เราได้รับออเดอร์ของ ${names[0]} เรียบร้อยแล้ว (${itemsToSend.length} รายการ)`
-        : `เราได้รับออเดอร์เรียบร้อยแล้ว ${itemsToSend.length} รายการ (${names.join(', ')})`;
-
-      setTimeout(() => openSuccessModal(summary), 350);
-
-      cart = [];
-      renderCart();
-      document.getElementById('f-name').value = '';
-      resetFormAfterAdd();
-      loadOrders();
-    } else {
-      // เก็บเฉพาะรายการที่ส่งไม่สำเร็จไว้ในตะกร้า ให้ลองใหม่ได้
-      cart = failed;
-      renderCart();
-      statusEl.style.color = 'var(--danger)';
-      statusEl.textContent = `ส่งไม่สำเร็จ ${failed.length} รายการ กรุณาลองกดยืนยันอีกครั้ง`;
-    }
-  }catch(e){
-    closeConfirmModal();
-    statusEl.style.color = 'var(--danger)';
-    statusEl.textContent = 'เกิดข้อผิดพลาดในการเชื่อมต่อ';
-  }finally{
-    confirmBtn.disabled = false;
-    confirmBtn.textContent = 'ยืนยันออเดอร์';
-    cancelBtn.style.pointerEvents = 'auto';
   }
-});
 
-document.getElementById('refresh-btn').addEventListener('click', loadOrders);
+  loadBoard(shift, points, employees) {
+    const saved = lsGet('board.' + shift, null);
+    const assignments = {};
+    points.forEach(p => { assignments[p.id] = new Array(p.cap || 1).fill(null); });
+    if (saved && saved.assignments) {
+      Object.keys(saved.assignments).forEach(id => {
+        if (!(id in assignments)) return;
+        const val = saved.assignments[id];
+        const cap = assignments[id].length;
+        if (Array.isArray(val)) {
+          for (let i = 0; i < cap; i++) assignments[id][i] = val[i] || null;
+        } else if (val) {
+          assignments[id][0] = val;
+        }
+      });
+      return { assignments, date: saved.date || todayStr() };
+    }
+    employees.forEach(e => { if (e.defaultPoint && assignments[e.defaultPoint]) assignments[e.defaultPoint][0] = e.id; });
+    return { assignments, date: todayStr() };
+  }
 
-updatePriceTag();
-renderCart();
-loadOrders();
+  saveBoard(next) {
+    const s = { ...this.state, ...next };
+    lsSet('board.' + s.shift, { assignments: s.assignments, date: s.date });
+  }
+
+  flash(text, kind) {
+    clearTimeout(this._t);
+    this.setState({ toast: { text, kind: kind || 'ok' } });
+    this._t = setTimeout(() => this.setState({ toast: null }), 2600);
+  }
+
+  place(empId, pointId, slotIndex) {
+    const a = {};
+    Object.keys(this.state.assignments).forEach(k => {
+      a[k] = this.state.assignments[k].map(v => (v === empId ? null : v));
+    });
+    if (pointId) {
+      const arr = a[pointId].slice();
+      let idx = slotIndex != null ? slotIndex : arr.findIndex(v => v == null);
+      if (idx < 0 || idx >= arr.length) idx = arr.length - 1;
+      arr[idx] = empId;
+      a[pointId] = arr;
+    }
+    this.setState({ assignments: a, armed: null, sheet: null });
+    this.saveBoard({ assignments: a });
+    this.syncToGitHub();
+  }
+
+  clearZone(pointIds, zoneName) {
+    const a = { ...this.state.assignments };
+    pointIds.forEach(id => { a[id] = a[id].map(() => null); });
+    this.setState({ assignments: a });
+    this.saveBoard({ assignments: a });
+    this.syncToGitHub();
+    this.flash('ล้างทั้งหมดใน ' + zoneName + ' แล้ว');
+  }
+
+  clearAllZones() {
+    const a = {};
+    Object.keys(this.state.assignments).forEach(k => { a[k] = this.state.assignments[k].map(() => null); });
+    this.setState({ assignments: a });
+    this.saveBoard({ assignments: a });
+    this.syncToGitHub();
+    this.flash('ล้างทั้งหมดทุกจุดแล้ว');
+  }
+
+  buildMessage() {
+    const { points, employees, assignments, date, shift } = this.state;
+    const sh = SHIFTS.find(s => s.id === shift) || SHIFTS[0];
+    let msg = TPL.header.replace('{date}', thaiDate(date)).replace('{shift}', sh.label + '  ' + sh.time);
+
+    const namesFor = (p) => (assignments[p.id] || [])
+      .map(id => { const e = employees.find(x => x.id === id); return e ? e.name : null; })
+      .filter(Boolean);
+
+    const byZone = {};
+    points.forEach(p => {
+      const z = ['Supply', 'Polishing', 'Jig Cleaning'].includes(p.name) ? p.name : (p.zone || 'อื่น ๆ');
+      (byZone[z] = byZone[z] || []).push(p);
+    });
+    const order = ['Supervisor Team', 'A Line', 'B Line', 'Supply', 'Mixing Room', 'Packing', 'Polishing', 'Jig Cleaning'];
+    let first = true;
+    order.forEach(section => {
+      const pts = byZone[section];
+      if (!pts) return;
+      if (['Supply', 'Polishing', 'Jig Cleaning'].includes(section)) {
+        const names = namesFor(pts[0]);
+        if (!names.length) return;
+        if (!first) msg += '\n';
+        first = false;
+        msg += '\n📍 ' + section + '\n: ' + names.join(', ');
+        return;
+      }
+      if (section === 'Packing') {
+        const lines = [];
+        pts.slice().sort((a, b) => (parseInt(a.name.replace('Packing ', ''), 10) || 0) - (parseInt(b.name.replace('Packing ', ''), 10) || 0))
+          .forEach(p => { const names = namesFor(p); if (names.length) lines.push('\n' + p.name.replace('Packing ', '') + ': ' + names.join(', ')); });
+        if (!lines.length) return;
+        if (!first) msg += '\n';
+        first = false;
+        msg += '\n📍 Packing' + lines.join('');
+        return;
+      }
+      const lines = [];
+      pts.forEach(p => { const names = namesFor(p); if (names.length) lines.push('\n' + p.name + ' : ' + names.join(', ')); });
+      if (!lines.length) return;
+      if (!first) msg += '\n';
+      first = false;
+      msg += '\n📍 ' + section + lines.join('');
+    });
+
+    let sup = 0, ot = 0;
+    points.forEach(p => {
+      const n = (assignments[p.id] || []).filter(Boolean).length;
+      if (!n) return;
+      if (p.zone === 'Supervisor Team') sup += n; else ot += n;
+    });
+    msg += '\n' + TPL.footer
+      .replace('{ot_count}', String(ot))
+      .replace('{supervisor_count}', String(sup))
+      .replace('{non_ot_count}', String(employees.length - ot - sup));
+    return msg;
+  }
+
+  renderVals() {
+    const S = this.state;
+    const assignedIds = new Set();
+    Object.values(S.assignments).forEach(arr => arr.forEach(id => { if (id) assignedIds.add(id); }));
+    const pool = S.employees.filter(e => !assignedIds.has(e.id));
+    const totalSlots = S.points.reduce((n, p) => n + (p.cap || 1), 0);
+    const filledSlots = Object.values(S.assignments).reduce((n, arr) => n + arr.filter(Boolean).length, 0);
+    const pct = totalSlots ? Math.round((filledSlots / totalSlots) * 100) : 0;
+    const allOpen = ZONE_DEFS.every(z => S.open[z.zone]);
+    const armedEmp = S.employees.find(e => e.id === S.armed) || null;
+
+    const avatar = (bg, fg) => 'flex:none;width:38px;height:38px;border-radius:11px;background:' + bg + ';color:' + fg +
+      ';display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:600';
+
+    const zones = ZONE_DEFS.map(zd => {
+      const pts = S.points.filter(p => p.zone === zd.zone);
+      const zoneTotal = pts.reduce((n, p) => n + (p.cap || 1), 0);
+      const zf = pts.reduce((n, p) => n + (S.assignments[p.id] || []).filter(Boolean).length, 0);
+      const open = !!S.open[zd.zone];
+      const K1 = ink(zd);
+      return {
+        name: zd.zone, open,
+        headStyle: 'width:100%;display:flex;align-items:stretch;background:' + zd.color,
+        toggleStyle: 'flex:1 1 auto;min-width:0;display:flex;align-items:center;gap:8px;padding:9px 12px;border:none;cursor:pointer;text-align:left;min-height:48px;background:transparent',
+        titleStyle: 'flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:clamp(13px,3.6vw,16px);line-height:1.45;font-weight:700;letter-spacing:.01em;text-transform:uppercase;color:' + K1.c1,
+        countLabel: zf + '/' + zoneTotal,
+        countStyle: 'flex:none;line-height:1.3;font-family:Oswald,sans-serif;font-size:12.5px;padding:3px 9px;border-radius:99px;letter-spacing:.03em;color:' + K1.c1 +
+          ';background:' + (zf === zoneTotal ? K1.chip2 : K1.chip),
+        chevron: 'flex:none;font-size:20px;color:' + K1.c2 + ';transition:transform .18s;display:inline-block;transform:rotate(' + (open ? '90' : '0') + 'deg)',
+        hasFilled: zf > 0,
+        clearStyle: 'flex:none;align-self:center;margin-right:10px;padding:7px 11px;border-radius:8px;border:1px solid ' + K1.chip2 + ';background:transparent;font-size:11.5px;font-weight:600;letter-spacing:.02em;white-space:nowrap;cursor:pointer;color:' + K1.c2,
+        onClear: () => this.clearZone(pts.map(p => p.id), zd.zone),
+        onToggle: () => {
+          const o = { ...S.open, [zd.zone]: !open };
+          this.setState({ open: o }); lsSet('open', o);
+        },
+        stations: pts.flatMap(p => {
+          const cap = p.cap || 1;
+          return Array.from({ length: cap }, (_, si) => {
+            const empId = (S.assignments[p.id] || [])[si];
+            const e = S.employees.find(x => x.id === empId);
+            const hot = !!S.armed;
+            const slotLabel = p.name + (cap > 1 ? ' (คนที่ ' + (si + 1) + ')' : '');
+            return {
+              name: slotLabel,
+              initial: e ? initial(e.name) : '+',
+              code: e ? (e.empCode || '') : '',
+              empLabel: e ? e.name : (hot ? 'แตะเพื่อวางที่นี่' : '— ว่าง —'),
+              nameStyle: 'flex:1 1 0;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:24px;font-weight:600;line-height:1.5;text-align:left;color:' +
+                (e ? K1.c1 : (hot ? 'var(--accent)' : 'var(--dim2)')),
+              subStyle: 'white-space:nowrap;text-align:right;font-size:14px;font-family:Oswald,sans-serif;letter-spacing:.05em;text-transform:uppercase;text-align:left;color:' +
+                (e ? '#FFFFFF' : 'var(--dim)'),
+              codeStyle: 'flex:none;font-size:13px;font-weight:600;font-family:Oswald,sans-serif;padding:2px 7px;border-radius:6px;color:' +
+                (e ? K1.c1 : 'var(--dim2)') + ';background:' + (e ? K1.chip : 'transparent'),
+              avatar: avatar(e ? K1.chip : 'var(--surface3)', e ? K1.c1 : 'var(--dim2)'),
+              style: 'display:flex;align-items:center;justify-content:flex-start;gap:10px;width:100%;min-height:60px;padding:9px 10px;border-radius:12px;text-align:left;cursor:pointer;background:' +
+                (e ? zd.color : 'transparent') + ';border:1px ' + (e ? 'solid ' + zd.color : 'dashed var(--line)') +
+                (hot ? ';box-shadow:0 0 0 1.5px var(--accent) inset' : ''),
+              onTap: () => {
+                if (S.armed) { this.place(S.armed, p.id, si); return; }
+                this.setState({ sheet: { type: 'station', pointId: p.id, slotIndex: si } });
+              },
+            };
+          });
+        }),
+      };
+    });
+
+    const sheet = S.sheet;
+    const stPoint = sheet && sheet.type === 'station' ? S.points.find(p => p.id === sheet.pointId) : null;
+    const stSlot = sheet && sheet.type === 'station' ? (sheet.slotIndex || 0) : 0;
+    const stEmp = stPoint ? S.employees.find(e => e.id === (S.assignments[stPoint.id] || [])[stSlot]) : null;
+    const draftEmp = sheet && sheet.type === 'emp' ? S.draft : null;
+
+    return {
+      headerSub: (SHIFTS.find(s => s.id === S.shift) || SHIFTS[0]).time + ' · ' + thaiDate(S.date),
+      date: S.date,
+      onDate: (ev) => { const d = ev.target.value; this.setState({ date: d }); this.saveBoard({ date: d }); this.syncToGitHub(); },
+      shiftTabs: SHIFTS.map(s => ({
+        label: s.label, time: s.time,
+        timeStyle: 'font-size:clamp(11px,3.3vw,15px);font-family:Oswald,sans-serif;letter-spacing:0;line-height:1.1;color:' +
+          (s.id === S.shift ? s.ink : 'var(--dim)'),
+        style: 'display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;height:56px;padding:0 2px;border-radius:12px;cursor:pointer;white-space:nowrap;overflow:hidden;border:1px solid ' +
+          (s.id === S.shift ? s.color : 'var(--line)') + ';background:' + (s.id === S.shift ? s.color : 'var(--surface2)') +
+          ';color:' + (s.id === S.shift ? s.ink : 'var(--dim)'),
+        onPick: () => {
+          if (s.id === S.shift) return;
+          const b = this.loadBoard(s.id, S.points, S.employees);
+          lsSet('shift', s.id);
+          this.setState({ shift: s.id, assignments: b.assignments, date: b.date, armed: null, sheet: null });
+        },
+      })),
+
+      isBoard: S.tab === 'board', isPeople: S.tab === 'people', isMsg: S.tab === 'message',
+      filledLabel: filledSlots + ' / ' + totalSlots + ' จุด',
+      progressStyle: 'height:100%;width:' + pct + '%;background:var(--ok);border-radius:99px;transition:width .25s',
+      toggleAllLabel: allOpen ? 'ย่อทั้งหมด' : 'ขยายทั้งหมด',
+      toggleAll: () => {
+        const o = {};
+        ZONE_DEFS.forEach(z => { o[z.zone] = !allOpen; });
+        this.setState({ open: o }); lsSet('open', o);
+      },
+      hasAnyFilled: filledSlots > 0,
+      clearAllZones: () => this.clearAllZones(),
+
+      armed: !!armedEmp,
+      armedName: armedEmp ? armedEmp.name : '',
+      disarm: () => this.setState({ armed: null }),
+      hasPool: pool.length > 0,
+      poolEmpty: pool.length === 0,
+      poolCount: pool.length,
+      pool: pool.map(e => ({
+        name: e.name,
+        style: 'min-height:44px;padding:0 15px;border-radius:99px;cursor:pointer;font-size:14.5px;font-weight:600;border:1px solid ' +
+          (S.armed === e.id ? 'var(--accent)' : 'var(--line)') + ';background:' + (S.armed === e.id ? 'var(--accent)' : 'var(--surface2)') +
+          ';color:' + (S.armed === e.id ? 'var(--accent-ink)' : 'var(--text)'),
+        onArm: () => this.setState({ armed: S.armed === e.id ? null : e.id }),
+      })),
+      zones,
+
+      empCount: S.employees.length,
+      people: S.employees.map(e => {
+        const p = S.points.find(x => x.id === e.defaultPoint);
+        const zd = p ? ZONE_DEFS.find(z => z.zone === p.zone) : null;
+        return {
+          name: e.name, initial: initial(e.name),
+          sub: (e.empCode || 'ไม่มีรหัส') + ' · ' + (p ? p.zone + ' / ' + p.name : 'ไม่มีจุดเริ่มต้น'),
+          avatar: avatar(zd ? ink(zd).chip : 'var(--surface3)', zd ? ink(zd).c1 : 'var(--dim2)') +
+            (zd ? '' : ';border:1px dashed var(--line)'),
+          nameStyle: 'font-size:16px;font-weight:700;line-height:1.5;color:' + (zd ? ink(zd).c1 : 'var(--text)'),
+          subStyle: 'font-size:12.5px;line-height:1.5;color:' + (zd ? ink(zd).c2 : 'var(--dim)'),
+          chevron: 'flex:none;font-size:19px;color:' + (zd ? ink(zd).c2 : 'var(--dim2)'),
+          style: 'display:flex;align-items:center;gap:12px;width:100%;min-height:64px;padding:11px 13px;border-radius:14px;cursor:pointer;text-align:left;background:' +
+            (zd ? zd.color : 'var(--surface)') + ';border:1px solid ' + (zd ? zd.color : 'var(--line)'),
+          onEdit: () => this.setState({ sheet: { type: 'emp' }, draft: { ...e, isNew: false } }),
+        };
+      }),
+      addEmp: () => this.setState({ sheet: { type: 'emp' }, draft: { id: uid(), name: '', empCode: '', defaultPoint: '', isNew: true } }),
+
+      message: this.buildMessage(),
+      noop: () => {},
+      copyMsg: async () => {
+        const text = this.buildMessage();
+        try { await navigator.clipboard.writeText(text); this.flash('คัดลอกข้อความแล้ว'); }
+        catch (err) {
+          const ta = document.createElement('textarea');
+          ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+          document.body.appendChild(ta); ta.select();
+          try { document.execCommand('copy'); this.flash('คัดลอกข้อความแล้ว'); }
+          catch (e2) { this.flash('คัดลอกไม่สำเร็จ', 'err'); }
+          document.body.removeChild(ta);
+        }
+      },
+      sendLabel: S.sending ? 'กำลังส่ง…' : 'ส่งออกไป GitHub → LINE',
+      sendStyle: 'width:100%;height:54px;border-radius:14px;border:1px solid var(--ok);font-size:16px;font-weight:700;cursor:pointer;background:' +
+        (S.sending ? 'var(--surface2)' : 'var(--ok)') + ';color:' + (S.sending ? 'var(--dim)' : 'var(--ok-ink)'),
+      sendMsg: async () => {
+        if (S.sending) return;
+        const c = S.cfg;
+        if (!c.token || !c.owner || !c.repo) { this.setState({ sheet: { type: 'settings' } }); this.flash('ยังไม่ได้ตั้งค่าโทเคน', 'err'); return; }
+        this.setState({ sending: true });
+        try {
+          const res = await fetch('https://api.github.com/repos/' + c.owner + '/' + c.repo + '/dispatches', {
+            method: 'POST',
+            headers: { Accept: 'application/vnd.github+json', Authorization: 'Bearer ' + c.token, 'X-GitHub-Api-Version': '2022-11-28', 'Content-Type': 'application/json' },
+            body: JSON.stringify({ event_type: c.eventType || 'ot_message', client_payload: { message: this.buildMessage(), date: S.date, shift: (SHIFTS.find(s => s.id === S.shift) || SHIFTS[0]).label } }),
+          });
+          if (res.status === 204) this.flash('ส่งสำเร็จ กำลังส่งต่อไป LINE');
+          else {
+            let d = ''; try { d = (await res.json()).message || ''; } catch (e) {}
+            this.flash('ส่งไม่สำเร็จ (' + res.status + ') ' + d, 'err');
+          }
+        } catch (e) { this.flash('ส่งไม่สำเร็จ: เชื่อมต่อไม่ได้', 'err'); }
+        this.setState({ sending: false });
+      },
+      openSettings: () => this.setState({ sheet: { type: 'settings' } }),
+
+      tabs: [
+        { id: 'board', icon: '▦', label: 'บอร์ด' },
+        { id: 'people', icon: '☰', label: 'พนักงาน' },
+        { id: 'message', icon: '✉', label: 'ข้อความ' },
+      ].map(t => ({
+        icon: t.icon, label: t.label,
+        style: 'display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;height:54px;border-radius:14px;border:none;cursor:pointer;background:' +
+          (S.tab === t.id ? 'var(--accent-soft)' : 'transparent') + ';color:' + (S.tab === t.id ? 'var(--accent)' : 'var(--dim2)'),
+        onPick: () => this.setState({ tab: t.id, armed: null }),
+      })),
+
+      sheetOpen: !!sheet,
+      closeSheet: () => this.setState({ sheet: null, draft: null }),
+      sheetTitle: !sheet ? '' : sheet.type === 'station' ? (stPoint ? stPoint.name + (stPoint.cap > 1 ? ' (คนที่ ' + (stSlot + 1) + ')' : '') : '') : sheet.type === 'settings' ? 'ตั้งค่าการส่ง' : (draftEmp && draftEmp.isNew ? 'เพิ่มพนักงาน' : 'แก้ไขพนักงาน'),
+      sheetSub: !sheet ? '' : sheet.type === 'station' ? (stPoint ? stPoint.zone : '') : sheet.type === 'settings' ? 'GitHub repository dispatch' : 'ข้อมูลจะถูกบันทึกในเครื่อง',
+      sheetIsStation: !!sheet && sheet.type === 'station',
+      sheetIsEmp: !!sheet && sheet.type === 'emp',
+      sheetIsSettings: !!sheet && sheet.type === 'settings',
+
+      stationHasEmp: !!stEmp,
+      stationEmpName: stEmp ? stEmp.name : '',
+      unassign: () => { if (stEmp) this.place(stEmp.id, null); },
+      pickList: (stPoint ? S.employees.filter(e => e.id !== (stEmp && stEmp.id)) : []).map(e => {
+        let cur = null, curSlot = -1;
+        S.points.forEach(x => {
+          const idx = (S.assignments[x.id] || []).indexOf(e.id);
+          if (idx !== -1) { cur = x; curSlot = idx; }
+        });
+        const dp = S.points.find(x => x.id === e.defaultPoint);
+        const zd = dp ? ZONE_DEFS.find(z => z.zone === dp.zone) : null;
+        const K2 = ink(zd);
+        return {
+          name: e.name, initial: initial(e.name),
+          sub: (e.empCode || '—') + (cur ? ' · อยู่ที่ ' + cur.zone + ' / ' + cur.name + (cur.cap > 1 ? ' (คนที่ ' + (curSlot + 1) + ')' : '') : ' · รอจัด'),
+          avatar: avatar(zd ? K2.chip : 'var(--surface3)', zd ? K2.c1 : 'var(--dim2)'),
+          nameStyle: 'font-size:15px;font-weight:700;line-height:1.5;color:' + (zd ? K2.c1 : 'var(--text)'),
+          subStyle: 'font-size:11.5px;line-height:1.5;color:' + (zd ? K2.c2 : 'var(--dim)'),
+          style: 'display:flex;align-items:center;gap:12px;width:100%;min-height:58px;padding:0 13px;border-radius:12px;cursor:pointer;text-align:left;background:' +
+            (zd ? zd.color : 'var(--surface2)') + ';border:1px solid ' + (zd ? zd.color : 'var(--line)'),
+          onPick: () => this.place(e.id, stPoint.id, stSlot),
+        };
+      }),
+
+      draftName: draftEmp ? draftEmp.name : '',
+      draftCode: draftEmp ? draftEmp.empCode || '' : '',
+      draftPoint: draftEmp ? draftEmp.defaultPoint || '' : '',
+      onDraftName: (ev) => this.setState({ draft: { ...S.draft, name: ev.target.value } }),
+      onDraftCode: (ev) => this.setState({ draft: { ...S.draft, empCode: ev.target.value } }),
+      onDraftPoint: (ev) => this.setState({ draft: { ...S.draft, defaultPoint: ev.target.value } }),
+      flatPoints: S.points.map(p => ({ id: p.id, label: p.zone + ' / ' + p.name })),
+      saveDraft: () => {
+        const d = S.draft;
+        if (!d || !d.name.trim()) { this.flash('ใส่ชื่อพนักงานก่อน', 'err'); return; }
+        const rec = { id: d.id, name: d.name.trim(), empCode: (d.empCode || '').trim(), defaultPoint: d.defaultPoint || null };
+        const list = d.isNew ? S.employees.concat([rec]) : S.employees.map(e => (e.id === rec.id ? rec : e));
+        lsSet('employees', list);
+        this.setState({ employees: list, sheet: null, draft: null });
+        this.syncToGitHub();
+        this.flash('บันทึกแล้ว กำลังซิงค์ขึ้น GitHub…');
+      },
+      deleteDraft: () => {
+        const d = S.draft;
+        if (!d) return;
+        if (!confirm('ลบ "' + (d.name || 'พนักงานคนนี้') + '" ออกจากระบบ?')) return;
+        const list = S.employees.filter(e => e.id !== d.id);
+        const a = {};
+        Object.keys(S.assignments).forEach(k => { a[k] = S.assignments[k].map(v => (v === d.id ? null : v)); });
+        lsSet('employees', list);
+        this.setState({ employees: list, assignments: a, sheet: null, draft: null });
+        this.saveBoard({ assignments: a });
+        this.syncToGitHub();
+        this.flash('ลบแล้ว กำลังซิงค์ขึ้น GitHub…');
+      },
+
+      cfgOwner: S.cfg.owner || '', cfgRepo: S.cfg.repo || '', cfgEvent: S.cfg.eventType || '', cfgToken: S.cfg.token || '',
+      onCfgOwner: (ev) => this.setState({ cfg: { ...S.cfg, owner: ev.target.value } }),
+      onCfgRepo: (ev) => this.setState({ cfg: { ...S.cfg, repo: ev.target.value } }),
+      onCfgEvent: (ev) => this.setState({ cfg: { ...S.cfg, eventType: ev.target.value } }),
+      onCfgToken: (ev) => this.setState({ cfg: { ...S.cfg, token: ev.target.value } }),
+      saveCfg: () => {
+        lsSet('cfg', S.cfg);
+        this.setState({ sheet: null });
+        this._sha = null;
+        this.syncFromGitHub(false);
+        this.flash('บันทึกการตั้งค่าแล้ว กำลังดึงข้อมูลล่าสุด…');
+      },
+      manualSync: () => this.syncFromGitHub(false),
+
+      hasToast: !!S.toast,
+      toastText: S.toast ? S.toast.text : '',
+      toastStyle: 'position:absolute;left:14px;right:14px;bottom:calc(env(safe-area-inset-bottom,0px) + 82px);z-index:90;padding:13px 15px;border-radius:13px;font-size:14px;font-weight:600;text-align:center;box-shadow:var(--shadow);animation:otFade .16s ease;background:' +
+        (S.toast && S.toast.kind === 'err' ? 'var(--danger)' : 'var(--ok)') + ';color:' + (S.toast && S.toast.kind === 'err' ? '#fff' : 'var(--ok-ink)'),
+    };
+  }
+}
+
 </script>
 </body>
 </html>
