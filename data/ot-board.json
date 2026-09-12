@@ -143,7 +143,7 @@
     "morning": {
       "assignments": {
         "p-sv1": [
-          "e01"
+          null
         ],
         "p-sv2": [
           null
@@ -301,5 +301,5 @@
       "date": "2026-08-24"
     }
   },
-  "updatedAt": "2026-09-12T08:02:14.196Z"
+  "updatedAt": "2026-09-12T08:03:30.507Z"
 }
