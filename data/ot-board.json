@@ -297,9 +297,81 @@
       "date": "2026-08-24"
     },
     "holiday": {
-      "assignments": {},
-      "date": "2026-08-24"
+      "assignments": {
+        "p-sv1": [
+          null
+        ],
+        "p-sv2": [
+          null
+        ],
+        "p-sv3": [
+          null
+        ],
+        "p-a1": [
+          null
+        ],
+        "p-a2": [
+          null
+        ],
+        "p-a3": [
+          null
+        ],
+        "p-a4": [
+          null
+        ],
+        "p-a5": [
+          null
+        ],
+        "p-b1": [
+          null
+        ],
+        "p-b2": [
+          null
+        ],
+        "p-b3": [
+          null
+        ],
+        "p-b4": [
+          null
+        ],
+        "p-b5": [
+          null
+        ],
+        "p-su1": [
+          null
+        ],
+        "p-mx1": [
+          null
+        ],
+        "p-mx2": [
+          null
+        ],
+        "p-pk1": [
+          null,
+          null
+        ],
+        "p-pk2": [
+          null,
+          null
+        ],
+        "p-pk3": [
+          null,
+          null
+        ],
+        "p-pk4": [
+          null,
+          null
+        ],
+        "p-po1": [
+          null
+        ],
+        "p-jc1": [
+          null,
+          null
+        ]
+      },
+      "date": "2026-09-20"
     }
   },
-  "updatedAt": "2026-09-18T02:00:01.840Z"
+  "updatedAt": "2026-09-18T02:00:29.003Z"
 }
